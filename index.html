@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="GitHub Pages 홈" />
+  <title>My GitHub Page</title>
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2e;
+      --text:#e9eefc;
+      --muted:#a9b4d6;
+      --line:rgba(255,255,255,.10);
+      --accent:#7aa7ff;
+      --accent2:#9cffd2;
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+      --radius:18px;
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(122,167,255,.25), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(156,255,210,.16), transparent 60%),
+        radial-gradient(900px 700px at 50% 110%, rgba(255,255,255,.06), transparent 60%),
+        var(--bg);
+      line-height:1.55;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 18px 40px}
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px; padding:10px 0 18px;
+    }
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:40px; height:40px; border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 30px rgba(122,167,255,.25);
+      display:grid; place-items:center;
+      color:#061024; font-weight:900;
+    }
+    nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .pill{
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(8px);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      font-size:14px;
+    }
+    .pill:hover{transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.18)}
+    .hero{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+    }
+    .card{
+      background: rgba(17,26,46,.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:22px;
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 200px at 20% 0%, rgba(122,167,255,.18), transparent 60%);
+      pointer-events:none;
+    }
+    .title{font-size:40px; line-height:1.15; margin:0 0 10px; letter-spacing:-.02em}
+    .subtitle{margin:0 0 18px; color:var(--muted)}
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .btn{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      padding:12px 14px;
+      border-radius: 12px;
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight:700;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.18)}
+    .btn.primary{
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#061024;
+    }
+    .btn.primary:hover{filter: brightness(1.03)}
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+    .mini{
+      padding:16px;
+      border-radius: 16px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      position:relative;
+    }
+    .mini:hover{transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18)}
+    .mini h3{margin:0 0 6px; font-size:16px}
+    .mini p{margin:0; color:var(--muted); font-size:14px}
+    .side h2{margin:0 0 12px; font-size:18px}
+    .list{display:flex; flex-direction:column; gap:10px}
+    .item{
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: rgba(255,255,255,.04);
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .item:hover{transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18)}
+    .item .meta{color:var(--muted); font-size:12px; margin-top:2px}
+    footer{
+      margin-top:28px;
+      color:var(--muted);
+      font-size:13px;
+      display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center;
+      padding-top:14px;
+      border-top:1px solid var(--line);
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      padding:2px 6px;
+      border:1px solid var(--line);
+      border-bottom-color: rgba(255,255,255,.22);
+      border-radius:8px;
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">GH</div>
+        <div>
+          <div style="font-weight:900">My GitHub Page</div>
+          <div style="color:var(--muted); font-size:13px">프로젝트 · 포트폴리오 · 링크 모음</div>
+        </div>
+      </div>
+
+      <nav>
+        <a class="pill" href="#projects">Projects</a>
+        <a class="pill" href="#about">About</a>
+        <a class="pill" href="#contact">Contact</a>
+        <!-- 아래 링크는 네 계정/레포로 바꿔줘 -->
+        <a class="pill" href="https://github.com/USERNAME" target="_blank" rel="noreferrer">GitHub</a>
+      </nav>
+    </header>
+
+    <section class="hero" id="about">
+      <div class="card">
+        <h1 class="title">안녕하세요 👋<br/>여기에 한 줄 소개를 넣어보세요.</h1>
+        <p class="subtitle">
+          예) 인디게임/웹서비스를 만드는 1인 개발자입니다. GitHub Pages로 프로젝트와 링크를 정리합니다.
+        </p>
+
+        <div class="ctaRow">
+          <a class="btn primary" href="#projects">🚀 프로젝트 보기</a>
+          <a class="btn" href="https://github.com/USERNAME" target="_blank" rel="noreferrer">⭐ GitHub 방문</a>
+          <a class="btn" href="#contact">✉️ 연락하기</a>
+        </div>
+
+        <div class="grid">
+          <a class="mini" href="https://github.com/USERNAME/REPO1" target="_blank" rel="noreferrer">
+            <h3>Repo 1</h3>
+            <p>한 줄 설명 (예: stock-notify 웹페이지)</p>
+          </a>
+          <a class="mini" href="https://github.com/USERNAME/REPO2" target="_blank" rel="noreferrer">
+            <h3>Repo 2</h3>
+            <p>한 줄 설명 (예: 게임 프로젝트)</p>
+          </a>
+          <a class="mini" href="https://github.com/USERNAME/REPO3" target="_blank" rel="noreferrer">
+            <h3>Repo 3</h3>
+            <p>한 줄 설명 (예: 유틸/툴)</p>
+          </a>
+        </div>
+      </div>
+
+      <aside class="card side" id="projects">
+        <h2>최근/대표 프로젝트</h2>
+        <div class="list">
+          <a class="item" href="https://USERNAME.github.io/REPO1/" target="_blank" rel="noreferrer">
+            <div>
+              <div style="font-weight:800">프로젝트 A</div>
+              <div class="meta">GitHub Pages · Web</div>
+            </div>
+            <div aria-hidden="true">→</div>
+          </a>
+
+          <a class="item" href="https://github.com/USERNAME/REPO2" target="_blank" rel="noreferrer">
+            <div>
+              <div style="font-weight:800">프로젝트 B</div>
+              <div class="meta">Unity · Game</div>
+            </div>
+            <div aria-hidden="true">→</div>
+          </a>
+
+          <a class="item" href="https://github.com/USERNAME/REPO3" target="_blank" rel="noreferrer">
+            <div>
+              <div style="font-weight:800">프로젝트 C</div>
+              <div class="meta">Python · Automation</div>
+            </div>
+            <div aria-hidden="true">→</div>
+          </a>
+        </div>
+
+        <div style="margin-top:14px; color:var(--muted); font-size:13px">
+          팁: 레포에 <span class="kbd">index.html</span> 올리고<br/>
+          Settings → Pages에서 브랜치/폴더 지정하면 끝!
+        </div>
+      </aside>
+    </section>
+
+    <section class="card" id="contact" style="margin-top:18px">
+      <h2 style="margin:0 0 8px">Contact</h2>
+      <p style="margin:0 0 14px; color:var(--muted)">
+        아래 링크를 네 정보로 바꿔줘.
+      </p>
+      <div class="ctaRow">
+        <a class="btn" href="mailto:you@example.com">📮 you@example.com</a>
+        <a class="btn" href="https://www.linkedin.com/in/your-id" target="_blank" rel="noreferrer">🔗 LinkedIn</a>
+        <a class="btn" href="https://x.com/your-id" target="_blank" rel="noreferrer">🐦 X</a>
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> My GitHub Page</div>
+      <div>Made with plain HTML/CSS · Hosted on GitHub Pages</div>
+    </footer>
+  </div>
+
+  <script>
+    // 현재 연도 자동
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // 내부 앵커 부드러운 스크롤
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener("click", (e)=>{
+        const id = a.getAttribute("href");
+        const el = document.querySelector(id);
+        if(!el) return;
+        e.preventDefault();
+        el.scrollIntoView({behavior:"smooth", block:"start"});
+        history.replaceState(null, "", id);
+      });
+    });
+  </script>
+</body>
+</html>

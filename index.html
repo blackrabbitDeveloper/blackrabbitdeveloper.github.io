@@ -3,93 +3,147 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BlackRabbit Invest Projects</title>
+  <meta name="description" content="BlackRabbit LAB는 주식 알림 봇, 암호화폐 예측 등 실용적인 개발 프로젝트를 공개합니다. 투자 참고용 도구와 개발 노하우를 소개합니다." />
+  <meta name="theme-color" content="#0c0c0c" />
+  <title>BlackRabbit LAB – 프로젝트 & 개발 블로그</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: '#3ECF8E' },
+          fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3935883771879302"
      crossorigin="anonymous"></script>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont,
-                   "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
-      background: #0f1220;
-      color: #ffffff;
-    }
-
-    .card {
-      background: #181c32;
-      border-radius: 16px;
-      padding: 32px 28px;
-      max-width: 360px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-    }
-
-    h1 {
-      margin: 0 0 16px;
-      font-size: 22px;
-    }
-
-    a.project {
-      display: block;
-      margin-top: 12px;
-      padding: 16px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #5f8cff, #7be3c0);
-      color: #0b1020;
-      font-weight: 700;
-      text-decoration: none;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    a.project:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(95,140,255,0.4);
-    }
-
-    .desc {
-      margin-top: 8px;
-      font-size: 14px;
-      opacity: 0.8;
-    }
-  </style>
 </head>
+<body class="min-h-screen bg-[#0c0c0c] font-sans text-white antialiased">
+  <a href="#main" class="skip-link">본문으로 건너뛰기</a>
 
-<body>
-  <div class="card">
-    <h1>🚀 프로젝트</h1>
-
-    <a
-      class="project"
-      href="https://blackrabbitdeveloper.github.io/stock-notify/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      프로젝트 1 : 주식 추천 봇
-    </a>
-
-    <div class="desc">
-      GitHub Pages · 자동 주식 추천 서비스
+  <!-- Header (Supabase-style: sticky, border, blur) -->
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-[#0c0c0c]/80 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+      <a href="index.html" class="text-lg font-semibold tracking-tight text-white no-underline">
+        Black<span class="text-brand">Rabbit</span> LAB
+      </a>
+      <nav class="flex items-center gap-6">
+        <a href="#about" class="text-sm font-medium text-zinc-400 transition hover:text-white">소개</a>
+        <a href="#projects" class="text-sm font-medium text-zinc-400 transition hover:text-white">프로젝트</a>
+        <a href="#article" class="text-sm font-medium text-zinc-400 transition hover:text-white">참고 자료</a>
+        <a href="privacy.html" class="text-sm font-medium text-zinc-400 transition hover:text-white">개인정보처리방침</a>
+      </nav>
     </div>
+  </header>
 
-    <a
-      class="project"
-      href="https://blackrabbitDeveloper.github.io/CryptoPricePredictor/"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      프로젝트 2 : 비트코인/이더리움 예측 봇
-    </a>
+  <main id="main" class="pb-20">
+    <!-- Hero (Supabase: "Build in a weekend. Scale to millions.") -->
+    <section class="px-4 pt-16 pb-20 text-center sm:px-6 sm:pt-24 sm:pb-28" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="mx-auto max-w-4xl text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+        주말에 만들고<br class="sm:hidden" />
+        <span class="text-brand">실제로 쓰는</span> 프로젝트
+      </h1>
+      <p class="mx-auto mt-5 max-w-xl text-lg text-zinc-400 sm:text-xl">
+        주식·암호화폐 참고 도구와 개인 개발 노하우를 공유합니다.
+      </p>
+    </section>
 
-    <div class="desc">
-      GitHub Pages · 코인 예측 서비스
+    <div class="mx-auto max-w-4xl px-4 sm:px-6">
+      <!-- About -->
+      <section id="about" class="py-12 sm:py-16" aria-labelledby="about-title">
+        <h2 id="about-title" class="mb-6 text-2xl font-semibold tracking-tight text-white sm:text-3xl">소개</h2>
+        <div class="rounded-xl border border-white/10 bg-[#181818] p-6 sm:p-8">
+          <p class="text-zinc-400 leading-relaxed">
+            BlackRabbit LAB는 개인 개발자가 만든 실용적인 웹 서비스와 도구를 공개하는 공간입니다.
+            주식 알림, 암호화폐 예측 등 투자 참고용 프로젝트를 GitHub Pages에서 무료로 제공하며,
+            모든 도구는 참고 목적으로만 사용하시고 실제 투자 결정은 본인 판단과 책임 하에 진행하시기 바랍니다.
+          </p>
+          <p class="mt-4 text-zinc-400 leading-relaxed">
+            각 프로젝트는 지속적으로 업데이트되며, 사용자 피드백과 기술 스택 개선을 반영하고 있습니다.
+            문의나 제안이 있으시면 GitHub 저장소 이슈를 활용해 주시면 감사하겠습니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section id="projects" class="py-12 sm:py-16" aria-labelledby="projects-title">
+        <h2 id="projects-title" class="mb-6 text-2xl font-semibold tracking-tight text-white sm:text-3xl">프로젝트</h2>
+        <div class="grid gap-5 sm:gap-6">
+          <a
+            href="https://blackrabbitdeveloper.github.io/stock-notify/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group block rounded-xl border border-white/10 bg-[#181818] p-6 text-left no-underline transition hover:border-brand/40 hover:bg-[#1c1c1c] sm:p-8"
+          >
+            <h3 class="text-xl font-semibold text-white">주식 추천 봇 (Stock Notify)</h3>
+            <p class="mt-1 text-sm text-zinc-500">GitHub Pages · 무료 주식 참고 서비스</p>
+            <p class="mt-3 text-zinc-400 leading-relaxed">
+              조건에 맞는 종목을 자동으로 추려 주는 주식 참고 도구입니다.
+              설정한 기준(시가총액, 거래량, 변동성 등)에 따라 종목 목록을 제공하며,
+              투자 참고용으로만 활용하실 수 있습니다. 실시간 데이터 연동과 맞춤 알림 기능을 지원합니다.
+            </p>
+            <span class="mt-4 inline-flex items-center text-sm font-medium text-brand group-hover:underline">
+              서비스 이용하기 →
+            </span>
+          </a>
+          <a
+            href="https://blackrabbitDeveloper.github.io/CryptoPricePredictor/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group block rounded-xl border border-white/10 bg-[#181818] p-6 text-left no-underline transition hover:border-brand/40 hover:bg-[#1c1c1c] sm:p-8"
+          >
+            <h3 class="text-xl font-semibold text-white">비트코인/이더리움 예측 봇 (Crypto Price Predictor)</h3>
+            <p class="mt-1 text-sm text-zinc-500">GitHub Pages · 암호화폐 참고 서비스</p>
+            <p class="mt-3 text-zinc-400 leading-relaxed">
+              비트코인과 이더리움 등 주요 암호화폐의 가격 추이를 시각화하고
+              간단한 예측 모델 결과를 참고할 수 있는 도구입니다.
+              과거 데이터 기반의 참고용 정보만 제공하며, 실제 매매 결정은 사용자 책임입니다.
+            </p>
+            <span class="mt-4 inline-flex items-center text-sm font-medium text-brand group-hover:underline">
+              서비스 이용하기 →
+            </span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Article / Reference -->
+      <section id="article" class="py-12 sm:py-16" aria-labelledby="article-title">
+        <h2 id="article-title" class="mb-6 text-2xl font-semibold tracking-tight text-white sm:text-3xl">참고 자료</h2>
+        <div class="rounded-xl border border-white/10 bg-[#181818] p-6 sm:p-8">
+          <h3 class="text-xl font-semibold text-white">개인 개발자가 사이드 프로젝트를 공개할 때 유의할 점</h3>
+          <p class="mt-3 text-zinc-400 leading-relaxed">
+            개인 개발자가 만든 주식·암호화폐 관련 도구를 공개할 때는
+            “참고용”이라는 점을 명확히 하고, 투자 권유나 보장이 아님을 안내하는 것이 좋습니다.
+          </p>
+          <ul class="mt-4 list-disc space-y-2 pl-5 text-zinc-400">
+            <li><strong class="text-zinc-300">면책 문구 명시</strong> – 투자 손실에 대한 책임이 없음을 서비스 내에 표시합니다.</li>
+            <li><strong class="text-zinc-300">데이터 출처 공개</strong> – 시세·지표 데이터의 출처를 밝혀 신뢰성을 높입니다.</li>
+            <li><strong class="text-zinc-300">업데이트 주기 안내</strong> – 데이터 갱신 주기와 모델 한계를 사용자에게 알립니다.</li>
+            <li><strong class="text-zinc-300">오픈소스 활용</strong> – GitHub 등에 코드를 공개하면 검증과 기여가 쉬워집니다.</li>
+          </ul>
+          <p class="mt-4 text-zinc-400 leading-relaxed">
+            BlackRabbit LAB의 모든 프로젝트는 위 원칙을 참고하여 제작·운영되고 있으며,
+            사용자 여러분의 건설적인 피드백을 환영합니다.
+          </p>
+        </div>
+      </section>
     </div>
+  </main>
 
-    
-  </div>
+  <!-- Footer -->
+  <footer class="border-t border-white/10 py-8 text-center">
+    <div class="mb-4 flex justify-center gap-6">
+      <a href="privacy.html" class="text-sm text-zinc-500 transition hover:text-white">개인정보처리방침</a>
+      <a href="https://github.com/blackrabbitdeveloper" target="_blank" rel="noopener noreferrer" class="text-sm text-zinc-500 transition hover:text-white">GitHub</a>
+    </div>
+    <p class="text-sm text-zinc-500">© BlackRabbit LAB. All rights reserved.</p>
+  </footer>
+  <script src="js/main.js"></script>
 </body>
 </html>

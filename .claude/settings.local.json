@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:blackrabbitlab.site)"
+      "WebFetch(domain:blackrabbitlab.site)",
+      "Bash(mkdir:*)",
+      "Bash(grep image::*)"
     ]
   }
 }

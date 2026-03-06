@@ -3,67 +3,113 @@ layout: default
 ---
 
 <!-- Hero -->
-<section class="px-4 pt-16 pb-14 text-center sm:px-6 sm:pt-24 sm:pb-20">
-  <div class="mx-auto max-w-3xl">
-    <div class="mb-4 inline-flex items-center rounded-full border border-brand/20 bg-brand/5 px-3 py-1 text-xs font-medium text-brand">
-      주식 · 자동매매 · 시장 분석
-    </div>
+<section class="relative overflow-hidden px-4 pt-16 pb-14 sm:px-6 sm:pt-24 sm:pb-20">
+  <!-- Background grid -->
+  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(62,207,142,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(62,207,142,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+
+  <div class="relative mx-auto max-w-4xl text-center">
+    <!-- Badge -->
+    <a
+      href="https://blackrabbitlab.site"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mb-6 inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/8 px-4 py-1.5 text-xs font-medium text-brand transition hover:border-brand/40 hover:bg-brand/12"
+    >
+      <span class="relative flex h-1.5 w-1.5">
+        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75"></span>
+        <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand"></span>
+      </span>
+      STOCKER 실시간 운영 중 — 바로가기 ↗
+    </a>
+
     <h1 class="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-      Black<span class="text-brand">Rabbit</span> LAB
+      Black<span class="text-brand">Rabbit</span> LAB<br class="sm:hidden" />
+      <span class="block mt-2 text-2xl sm:text-3xl lg:text-4xl font-medium text-zinc-400">시장 분석 블로그</span>
     </h1>
-    <p class="mx-auto mt-5 max-w-xl text-base text-zinc-400 sm:text-lg">
-      주식 자동매매 봇 성과 분석, 시장 브리핑, 암호화폐 예측까지 — 실제로 쓰는 개발 프로젝트를 기록합니다.
+
+    <p class="mx-auto mt-5 max-w-2xl text-base text-zinc-500 sm:text-lg">
+      기술적 분석 · 재무 필터 · 자기학습 기반<br class="sm:hidden" />
+      미국 주식 리서치 자동화 시스템 <strong class="text-zinc-300">STOCKER</strong>의 운영 기록과 시장 분석을 공유합니다.
     </p>
+
+    <!-- CTA buttons -->
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <a
+        href="https://blackrabbitlab.site"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-brand/90"
+      >
+        STOCKER 바로가기
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <a
+        href="#posts"
+        class="inline-flex items-center gap-2 rounded-lg border border-white/10 px-5 py-2.5 text-sm font-medium text-zinc-300 transition hover:border-white/20 hover:text-white"
+      >
+        분석 블로그 보기
+      </a>
+    </div>
   </div>
 </section>
 
+<!-- STOCKER Feature Pills -->
+<div class="mx-auto max-w-5xl px-4 sm:px-6 mb-14">
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+    <div class="rounded-xl border border-white/8 bg-[#1a1a1a] p-4 text-center">
+      <p class="font-mono text-xs text-brand mb-1.5">재무 분석</p>
+      <p class="text-xs text-zinc-500">PER · ROE<br/>영업이익률 필터</p>
+    </div>
+    <div class="rounded-xl border border-white/8 bg-[#1a1a1a] p-4 text-center">
+      <p class="font-mono text-xs text-brand mb-1.5">기술적 분석</p>
+      <p class="text-xs text-zinc-500">RSI · MACD<br/>볼린저 밴드</p>
+    </div>
+    <div class="rounded-xl border border-white/8 bg-[#1a1a1a] p-4 text-center">
+      <p class="font-mono text-xs text-brand mb-1.5">멀티 타임프레임</p>
+      <p class="text-xs text-zinc-500">월봉 · 주봉<br/>일봉 복합 분석</p>
+    </div>
+    <div class="rounded-xl border border-white/8 bg-[#1a1a1a] p-4 text-center">
+      <p class="font-mono text-xs text-brand mb-1.5">자기학습</p>
+      <p class="text-xs text-zinc-500">레짐 감지<br/>파라미터 자동 최적화</p>
+    </div>
+  </div>
+</div>
+
 <!-- Post List -->
-<div class="mx-auto max-w-5xl px-4 sm:px-6">
-
-  {% if site.categories.size > 0 %}
-  <!-- Category Filter -->
-  <div class="mb-8 flex flex-wrap gap-2">
-    <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">전체</span>
-    {% assign all_cats = site.categories | sort %}
-    {% for cat in all_cats %}
-    <span class="rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-zinc-500 transition hover:border-brand/30 hover:text-zinc-300 cursor-pointer">{{ cat[0] }}</span>
-    {% endfor %}
-  </div>
-  {% endif %}
-
+<div id="posts" class="mx-auto max-w-5xl px-4 sm:px-6">
   <div class="mb-6 flex items-center justify-between">
-    <h2 class="text-xl font-semibold text-white">최신 포스트</h2>
-    <span class="text-sm text-zinc-600">{{ site.posts.size }}개</span>
+    <h2 class="text-lg font-semibold text-white">최신 분석 포스트</h2>
+    <span class="font-mono text-xs text-zinc-600">{{ site.posts.size }} posts</span>
   </div>
 
-  <div class="grid gap-4 sm:gap-5">
+  <div class="grid gap-4">
     {% for post in site.posts %}
     <a
       href="{{ post.url | relative_url }}"
-      class="group block rounded-xl border border-white/8 bg-[#111111] p-5 text-left no-underline transition-all hover:border-brand/30 hover:bg-[#141414] sm:p-6"
+      class="group block rounded-xl border border-white/8 bg-[#111111] p-5 text-left no-underline transition-all hover:border-brand/25 hover:bg-[#161616] sm:p-6"
     >
       <div class="mb-2.5 flex flex-wrap items-center gap-2">
         {% for cat in post.categories %}
-        <span class="rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-medium text-brand">{{ cat }}</span>
+        <span class="rounded-sm bg-brand/10 px-2 py-0.5 font-mono text-xs font-medium text-brand">{{ cat }}</span>
         {% endfor %}
-        <time datetime="{{ post.date | date_to_xmlschema }}" class="text-xs text-zinc-600">
-          {{ post.date | date: "%Y년 %m월 %d일" }}
+        <time datetime="{{ post.date | date_to_xmlschema }}" class="font-mono text-xs text-zinc-600">
+          {{ post.date | date: "%Y-%m-%d" }}
         </time>
       </div>
-      <h3 class="text-lg font-semibold leading-snug text-white transition-colors group-hover:text-brand sm:text-xl">
+      <h3 class="text-base font-semibold leading-snug text-white transition-colors group-hover:text-brand sm:text-lg">
         {{ post.title }}
       </h3>
-      {% assign excerpt = post.content | strip_html | truncate: 180 %}
-      <p class="mt-2 text-sm leading-relaxed text-zinc-500">{{ excerpt }}</p>
-      <span class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
-        자세히 보기 <span aria-hidden="true">→</span>
+      {% assign excerpt = post.content | strip_html | truncate: 160 %}
+      <p class="mt-1.5 text-sm leading-relaxed text-zinc-600 line-clamp-2">{{ excerpt }}</p>
+      <span class="mt-3 inline-flex items-center gap-1 font-mono text-xs text-brand opacity-0 transition-opacity group-hover:opacity-100">
+        read more →
       </span>
     </a>
     {% endfor %}
 
     {% if site.posts.size == 0 %}
     <div class="rounded-xl border border-white/8 bg-[#111111] p-12 text-center">
-      <p class="text-zinc-500">아직 작성된 포스트가 없습니다.</p>
+      <p class="text-zinc-600">아직 작성된 포스트가 없습니다.</p>
     </div>
     {% endif %}
   </div>

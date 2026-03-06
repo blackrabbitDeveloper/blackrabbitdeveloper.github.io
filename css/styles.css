@@ -1,7 +1,8 @@
-/* Custom: skip link (a11y), smooth scroll */
 html {
   scroll-behavior: smooth;
 }
+
+/* Skip link (a11y) */
 .skip-link {
   position: fixed;
   left: 1rem;
@@ -20,4 +21,32 @@ html {
   transform: translateY(0);
   outline: 2px solid #3ECF8E;
   outline-offset: 2px;
+}
+
+/* Line clamp utility */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Prose table fix */
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.prose thead {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.prose th,
+.prose td {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* Code block syntax highlight */
+.highlight {
+  border-radius: 0.5rem;
+  overflow: hidden;
 }

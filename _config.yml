@@ -1,0 +1,39 @@
+title: BlackRabbit LAB
+description: 주식 자동매매 봇, 시장 분석, 암호화폐 예측 등 실용적인 개발 프로젝트와 시장 인사이트를 공유합니다.
+url: "https://blackrabbitdeveloper.github.io"
+baseurl: ""
+lang: ko
+
+author:
+  name: BlackRabbit LAB
+  github: blackrabbitdeveloper
+
+markdown: kramdown
+highlighter: rouge
+permalink: /posts/:year/:month/:day/:title/
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+paginate: 10
+paginate_path: "/page:num/"
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+
+exclude:
+  - README.md
+  - package.json
+  - tailwind.config.js
+  - src/
+  - node_modules/
+  - blog/
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag

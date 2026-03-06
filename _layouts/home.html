@@ -1,0 +1,70 @@
+---
+layout: default
+---
+
+<!-- Hero -->
+<section class="px-4 pt-16 pb-14 text-center sm:px-6 sm:pt-24 sm:pb-20">
+  <div class="mx-auto max-w-3xl">
+    <div class="mb-4 inline-flex items-center rounded-full border border-brand/20 bg-brand/5 px-3 py-1 text-xs font-medium text-brand">
+      주식 · 자동매매 · 시장 분석
+    </div>
+    <h1 class="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+      Black<span class="text-brand">Rabbit</span> LAB
+    </h1>
+    <p class="mx-auto mt-5 max-w-xl text-base text-zinc-400 sm:text-lg">
+      주식 자동매매 봇 성과 분석, 시장 브리핑, 암호화폐 예측까지 — 실제로 쓰는 개발 프로젝트를 기록합니다.
+    </p>
+  </div>
+</section>
+
+<!-- Post List -->
+<div class="mx-auto max-w-5xl px-4 sm:px-6">
+
+  {% if site.categories.size > 0 %}
+  <!-- Category Filter -->
+  <div class="mb-8 flex flex-wrap gap-2">
+    <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">전체</span>
+    {% assign all_cats = site.categories | sort %}
+    {% for cat in all_cats %}
+    <span class="rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-zinc-500 transition hover:border-brand/30 hover:text-zinc-300 cursor-pointer">{{ cat[0] }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="mb-6 flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-white">최신 포스트</h2>
+    <span class="text-sm text-zinc-600">{{ site.posts.size }}개</span>
+  </div>
+
+  <div class="grid gap-4 sm:gap-5">
+    {% for post in site.posts %}
+    <a
+      href="{{ post.url | relative_url }}"
+      class="group block rounded-xl border border-white/8 bg-[#111111] p-5 text-left no-underline transition-all hover:border-brand/30 hover:bg-[#141414] sm:p-6"
+    >
+      <div class="mb-2.5 flex flex-wrap items-center gap-2">
+        {% for cat in post.categories %}
+        <span class="rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-medium text-brand">{{ cat }}</span>
+        {% endfor %}
+        <time datetime="{{ post.date | date_to_xmlschema }}" class="text-xs text-zinc-600">
+          {{ post.date | date: "%Y년 %m월 %d일" }}
+        </time>
+      </div>
+      <h3 class="text-lg font-semibold leading-snug text-white transition-colors group-hover:text-brand sm:text-xl">
+        {{ post.title }}
+      </h3>
+      {% assign excerpt = post.content | strip_html | truncate: 180 %}
+      <p class="mt-2 text-sm leading-relaxed text-zinc-500">{{ excerpt }}</p>
+      <span class="mt-4 inline-flex items-center gap-1 text-xs font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
+        자세히 보기 <span aria-hidden="true">→</span>
+      </span>
+    </a>
+    {% endfor %}
+
+    {% if site.posts.size == 0 %}
+    <div class="rounded-xl border border-white/8 bg-[#111111] p-12 text-center">
+      <p class="text-zinc-500">아직 작성된 포스트가 없습니다.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>

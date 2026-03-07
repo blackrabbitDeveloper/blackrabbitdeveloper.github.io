@@ -1540,9 +1540,12 @@ def git_deploy(message: str) -> dict:
     """git add _posts/ _drafts/ → commit → push."""
     git = _find_git()
     try:
-        # git add
+        # git add (_drafts/는 폴더가 있을 때만 포함)
+        add_targets = ['_posts/']
+        if os.path.isdir(DRAFTS_DIR):
+            add_targets.append('_drafts/')
         subprocess.run(
-            [git, 'add', '_posts/', '_drafts/'],
+            [git, 'add'] + add_targets,
             cwd=PROJECT_ROOT, check=True, capture_output=True, text=True
         )
         # git commit

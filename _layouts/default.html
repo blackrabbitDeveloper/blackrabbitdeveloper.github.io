@@ -94,8 +94,8 @@
         </span>
       </a>
 
-      <!-- Nav -->
-      <nav class="flex items-center gap-1 sm:gap-2">
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-1">
         <a href="{{ '/' | relative_url }}" class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">블로그</a>
         <a href="{{ '/projects' | relative_url }}" class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">프로젝트</a>
         <a href="{{ '/about' | relative_url }}" class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">소개</a>
@@ -108,6 +108,37 @@
           STOCKER
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </a>
+      </nav>
+
+      <!-- Mobile: STOCKER CTA + Hamburger -->
+      <div class="flex items-center gap-2 md:hidden">
+        <a
+          href="https://blackrabbitlab.site"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1 rounded-md bg-brand px-2.5 py-1.5 text-xs font-semibold text-black transition hover:bg-brand/90"
+        >
+          STOCKER
+          <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <button
+          id="menu-toggle"
+          class="flex h-9 w-9 items-center justify-center rounded-md text-zinc-400 transition hover:bg-white/5 hover:text-white"
+          aria-label="메뉴 열기"
+          aria-expanded="false"
+        >
+          <svg id="icon-open" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobile-menu" class="hidden border-t border-white/8 md:hidden">
+      <nav class="mx-auto max-w-5xl space-y-0.5 px-4 py-2 sm:px-6">
+        <a href="{{ '/' | relative_url }}" class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">블로그</a>
+        <a href="{{ '/projects' | relative_url }}" class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">프로젝트</a>
+        <a href="{{ '/about' | relative_url }}" class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">소개</a>
       </nav>
     </div>
   </header>

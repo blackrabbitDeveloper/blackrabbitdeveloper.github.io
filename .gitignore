@@ -1,0 +1,26 @@
+# Jekyll 빌드 출력
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Bundler / Ruby
+.bundle/
+vendor/
+Gemfile.lock
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+
+# 로컬 도구 — 히스토리 백업 (git 불필요)
+_tools/.history/
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -1,0 +1,5 @@
+# Ollama 방식은 외부 패키지 불필요 (Python 표준 라이브러리만 사용)
+# Ollama 설치: https://ollama.com
+# 모델 다운로드 예시:
+#   ollama pull qwen2.5:7b
+#   ollama pull llama3.2:3b

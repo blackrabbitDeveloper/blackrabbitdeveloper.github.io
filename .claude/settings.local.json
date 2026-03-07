@@ -3,7 +3,9 @@
     "allow": [
       "WebFetch(domain:blackrabbitlab.site)",
       "Bash(mkdir:*)",
-      "Bash(grep image::*)"
+      "Bash(grep image::*)",
+      "Bash(python:*)",
+      "Bash(where git:*)"
     ]
   }
 }

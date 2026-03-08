@@ -176,13 +176,17 @@ layout: default
   }
 
   var _lastReported = '';
+  var _reportTimer = null;
   function reportNoResult(query) {
-    if (query === _lastReported) return; // 동일 검색어 중복 전송 방지
-    _lastReported = query;
-    var url = 'https://docs.google.com/forms/d/e/1FAIpQLSf_qc94k_BleB_Efjx-GchPSh0mzazzGO91jZb3gqvdRCN3aQ/formResponse'
-            + '?entry.714347720=' + encodeURIComponent(query)
-            + '&submit=Submit';
-    fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
+    clearTimeout(_reportTimer);
+    _reportTimer = setTimeout(function() {
+      if (query === _lastReported) return;
+      _lastReported = query;
+      var url = 'https://docs.google.com/forms/d/e/1FAIpQLSf_qc94k_BleB_Efjx-GchPSh0mzazzGO91jZb3gqvdRCN3aQ/formResponse'
+              + '?entry.714347720=' + encodeURIComponent(query)
+              + '&submit=Submit';
+      fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
+    }, 1500); // 타이핑 멈춘 후 1.5초 뒤 전송
   }
 
   // Search input

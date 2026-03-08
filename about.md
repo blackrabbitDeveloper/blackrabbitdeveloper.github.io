@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 소개
-description: BlackRabbit LAB — 주식·ETF·경제 개념을 쉽게 풀어 설명하는 투자 정보·경제 교육 블로그
+description: BlackRabbit LAB이 운영하는 투자·경제 교육 블로그 소개. 주식·ETF·경제 개념을 쉽게 풀어 설명합니다.
 ---
 
 <div class="mx-auto max-w-3xl px-4 sm:px-6 pt-10 pb-20">
@@ -11,9 +11,9 @@ description: BlackRabbit LAB — 주식·ETF·경제 개념을 쉽게 풀어 설
 
   <!-- What is -->
   <div class="rounded-xl border border-white/8 bg-[#111111] p-6 sm:p-8 mb-5">
-    <h2 class="text-base font-semibold text-white mb-3">BlackRabbit LAB이란?</h2>
+    <h2 class="text-base font-semibold text-white mb-3">이 블로그는?</h2>
     <p class="text-sm leading-relaxed text-zinc-400">
-      BlackRabbit LAB는 주식·ETF·거시경제·재테크 등 투자와 경제 관련 정보를 쉽고 정확하게 풀어 설명하는 개인 블로그입니다.
+      BlackRabbit LAB이 운영하는 투자·경제 교육 블로그입니다. 주식·ETF·거시경제·재테크 등 투자와 경제 관련 정보를 쉽고 정확하게 풀어 설명합니다.
     </p>
     <p class="mt-3 text-sm leading-relaxed text-zinc-400">
       복잡한 경제 용어와 투자 개념을 누구나 이해할 수 있는 언어로 정리하고,

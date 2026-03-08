@@ -7,7 +7,7 @@ description: BlackRabbit LAB이 운영하는 투자·경제 교육 블로그 소
 <div class="mx-auto max-w-3xl px-4 sm:px-6 pt-10 pb-20">
 
   <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-2">소개</h1>
-  <p class="font-mono text-xs text-zinc-600 mb-10">BlackRabbit LAB · blackrabbitdeveloper.github.io</p>
+
 
   <!-- What is -->
   <div class="rounded-xl border border-white/8 bg-[#111111] p-6 sm:p-8 mb-5">

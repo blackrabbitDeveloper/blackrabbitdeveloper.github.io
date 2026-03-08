@@ -5,7 +5,11 @@
       "Bash(mkdir:*)",
       "Bash(grep image::*)",
       "Bash(python:*)",
-      "Bash(where git:*)"
+      "Bash(where git:*)",
+      "Bash(git config:*)",
+      "Bash(git:*)",
+      "Bash(cmdkey:*)",
+      "WebFetch(domain:docs.google.com)"
     ]
   }
 }

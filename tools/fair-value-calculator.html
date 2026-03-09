@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "적정주가 계산기"
-description: "EPS·BPS·PER·PBR로 주식의 적정주가를 3가지 방식으로 계산하고 현재가 대비 괴리율을 확인하는 무료 도구"
+description: "종목명으로 실시간 데이터를 불러와 PER·PBR·그레이엄 넘버 3가지 방식으로 적정주가를 계산하는 무료 도구"
 permalink: /tools/fair-value-calculator/
 ---
 
@@ -24,47 +24,105 @@ permalink: /tools/fair-value-calculator/
       </div>
       <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">적정주가 계산기</h1>
     </div>
-    <p class="text-sm text-zinc-500 ml-12">PER·PBR·그레이엄 넘버 3가지 방식으로 주식의 적정가를 산출합니다.</p>
+    <p class="text-sm text-zinc-500 ml-12">종목명으로 데이터를 자동으로 불러오거나 직접 입력해 적정주가를 산출합니다.</p>
   </div>
 
-  <!-- Input Grid -->
+  <!-- ── 종목 검색 ── -->
+  <div class="rounded-xl border border-white/8 bg-[#111111] p-5 mb-4">
+    <p class="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-3">종목 검색 (자동 데이터 불러오기)</p>
+
+    <div class="flex gap-2">
+      <div class="relative flex-1">
+        <input
+          id="search-input"
+          type="text"
+          placeholder="종목명 또는 티커 입력 (예: Samsung, Apple, AAPL, 005930.KS)"
+          autocomplete="off"
+          class="w-full rounded-md bg-white/5 border border-white/8 px-3 py-2.5 text-sm text-white placeholder:text-zinc-700 focus:border-brand/50 focus:outline-none transition"
+        />
+        <!-- 드롭다운 -->
+        <div id="search-dropdown"
+          class="hidden absolute top-full left-0 right-0 mt-1.5 rounded-xl border border-white/10 bg-[#1c1c1c] shadow-2xl z-50 overflow-hidden">
+        </div>
+      </div>
+      <button
+        id="search-btn"
+        class="flex-shrink-0 flex items-center gap-2 rounded-md bg-brand/15 border border-brand/30 px-4 py-2.5 text-sm font-medium text-brand transition hover:bg-brand/25 disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        <svg id="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <svg id="loading-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden animate-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        검색
+      </button>
+    </div>
+
+    <!-- 상태 메시지 -->
+    <div id="fetch-status" class="hidden mt-3 flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-mono"></div>
+
+    <!-- 자동입력 출처 배지 -->
+    <div id="auto-badge" class="hidden mt-3 flex items-center gap-2">
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-brand/8 px-3 py-1 font-mono text-[11px] text-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="auto-badge-text">자동입력됨</span>
+      </span>
+      <span class="text-[11px] text-zinc-600">출처: Yahoo Finance · 지연 최대 15분 · 값 직접 수정 가능</span>
+    </div>
+
+    <p class="mt-3 text-[11px] text-zinc-700">
+      한국 주식은 6자리 종목코드 + <code class="text-zinc-600">.KS</code>(코스피) / <code class="text-zinc-600">.KQ</code>(코스닥) 형식을 사용하세요.
+      예: <code class="text-zinc-600">005930.KS</code> (삼성전자)
+    </p>
+  </div>
+
+  <!-- ── 기업 지표 입력 ── -->
   <div class="rounded-xl border border-white/8 bg-[#111111] p-5 mb-5">
-    <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-5">기업 지표 입력</h2>
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">기업 지표</h2>
+      <span id="currency-note" class="hidden font-mono text-[11px] text-zinc-600"></span>
+    </div>
     <div class="grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
 
       <!-- 현재 주가 -->
       <div>
         <label for="price" class="block text-sm text-zinc-300 mb-1.5">현재 주가</label>
         <div class="flex items-center gap-2">
-          <input id="price" type="number" value="85000" min="0" step="100"
-            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
-          <span class="text-xs text-zinc-600 whitespace-nowrap">원</span>
+          <input id="price" type="number" value="" min="0" step="100"
+            placeholder="직접 입력"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white placeholder:text-zinc-700 focus:border-brand/50 focus:outline-none transition" />
+          <span id="unit-price" class="text-xs text-zinc-600 whitespace-nowrap">원</span>
         </div>
       </div>
 
       <!-- EPS -->
       <div>
-        <label for="eps" class="block text-sm text-zinc-300 mb-1.5">
-          EPS
-          <span class="ml-1 text-[11px] text-zinc-600">(주당순이익)</span>
-        </label>
+        <div class="flex items-center justify-between mb-1.5">
+          <label for="eps" class="text-sm text-zinc-300">
+            EPS
+            <span class="ml-1 text-[11px] text-zinc-600">(주당순이익)</span>
+          </label>
+          <span id="eps-status" class="hidden font-mono text-[10px]"></span>
+        </div>
         <div class="flex items-center gap-2">
-          <input id="eps" type="number" value="6000" step="100"
-            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
-          <span class="text-xs text-zinc-600 whitespace-nowrap">원</span>
+          <input id="eps" type="number" value="" step="100"
+            placeholder="직접 입력"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white placeholder:text-zinc-700 focus:border-brand/50 focus:outline-none transition" />
+          <span id="unit-eps" class="text-xs text-zinc-600 whitespace-nowrap">원</span>
         </div>
       </div>
 
       <!-- BPS -->
       <div>
-        <label for="bps" class="block text-sm text-zinc-300 mb-1.5">
-          BPS
-          <span class="ml-1 text-[11px] text-zinc-600">(주당순자산)</span>
-        </label>
+        <div class="flex items-center justify-between mb-1.5">
+          <label for="bps" class="text-sm text-zinc-300">
+            BPS
+            <span class="ml-1 text-[11px] text-zinc-600">(주당순자산)</span>
+          </label>
+          <span id="bps-status" class="hidden font-mono text-[10px]"></span>
+        </div>
         <div class="flex items-center gap-2">
-          <input id="bps" type="number" value="55000" step="100"
-            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
-          <span class="text-xs text-zinc-600 whitespace-nowrap">원</span>
+          <input id="bps" type="number" value="" step="100"
+            placeholder="직접 입력"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white placeholder:text-zinc-700 focus:border-brand/50 focus:outline-none transition" />
+          <span id="unit-bps" class="text-xs text-zinc-600 whitespace-nowrap">원</span>
         </div>
       </div>
 
@@ -94,7 +152,7 @@ permalink: /tools/fair-value-calculator/
         </div>
       </div>
 
-      <!-- 현재 PER / PBR 표시 -->
+      <!-- 현재 PER / PBR -->
       <div class="flex flex-col justify-end gap-2">
         <div class="flex items-center justify-between rounded-lg bg-white/4 px-3 py-2">
           <span class="text-xs text-zinc-500">현재 PER</span>
@@ -109,7 +167,7 @@ permalink: /tools/fair-value-calculator/
     </div>
   </div>
 
-  <!-- Result Cards -->
+  <!-- ── 결과 카드 ── -->
   <div class="grid gap-4 sm:grid-cols-3">
 
     <!-- PER 방식 -->
@@ -197,17 +255,32 @@ permalink: /tools/fair-value-calculator/
     </div>
   </div>
 
-  <!-- 가이드 -->
+  <!-- 면책 고지 -->
   <div class="mt-4 rounded-xl border border-white/5 bg-[#111111]/40 px-5 py-4 space-y-2">
-    <p class="text-xs font-semibold text-zinc-500">지표 찾는 방법</p>
     <p class="text-xs text-zinc-600 leading-relaxed">
+      자동 불러오기는 Yahoo Finance 비공개 API를 경유합니다. 데이터가 없거나 오래된 경우 직접 입력하세요.
       <strong class="text-zinc-500">EPS·BPS</strong>는 네이버 금융 → 종목 검색 → 투자정보 → 재무제표에서 확인할 수 있습니다.
-      <strong class="text-zinc-500">목표 PER/PBR</strong>은 동일 섹터 업종 평균이나 해당 기업의 과거 평균을 참고하세요.
     </p>
     <p class="text-xs text-zinc-600 leading-relaxed">
-      ⚠️ 이 계산기는 단순 참고용 시뮬레이션 도구입니다. 주식 투자 추천이 아니며, 실제 투자 결정은 다양한 요인을 종합적으로 검토한 후 본인의 책임 하에 진행하시기 바랍니다.
+      ⚠️ 이 계산기는 단순 참고용 시뮬레이션 도구입니다. 주식 투자 추천이 아니며, 실제 투자 결정은 다양한 요인을 종합 검토 후 본인의 책임 하에 진행하시기 바랍니다.
     </p>
   </div>
+
+  <!-- AdFit: PC -->
+  <div class="mt-10 hidden md:flex justify-center">
+    <ins class="kakao_ad_area" style="display:none;"
+      data-ad-unit="DAN-Tg2vsj9NPcSmilIN"
+      data-ad-width="728"
+      data-ad-height="90"></ins>
+  </div>
+  <!-- AdFit: Mobile -->
+  <div class="mt-10 flex justify-center md:hidden">
+    <ins class="kakao_ad_area" style="display:none;"
+      data-ad-unit="DAN-S7Z4M0GuQWiVVG0s"
+      data-ad-width="320"
+      data-ad-height="100"></ins>
+  </div>
+  <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 
 </div>
 
@@ -215,114 +288,340 @@ permalink: /tools/fair-value-calculator/
 (function () {
   'use strict';
 
-  function fmtPrice(n) {
-    if (n >= 1e4) return Math.round(n).toLocaleString('ko-KR') + '원';
-    return Math.round(n) + '원';
+  /* ── 상수 ── */
+  const PROXY   = 'https://api.allorigins.win/raw?url=';
+  const YF      = 'https://query1.finance.yahoo.com';
+  const TIMEOUT = 12000; // ms
+
+  /* ── DOM refs ── */
+  const searchInput    = document.getElementById('search-input');
+  const searchBtn      = document.getElementById('search-btn');
+  const searchIcon     = document.getElementById('search-icon');
+  const loadingIcon    = document.getElementById('loading-icon');
+  const dropdown       = document.getElementById('search-dropdown');
+  const fetchStatus    = document.getElementById('fetch-status');
+  const autoBadge      = document.getElementById('auto-badge');
+  const autoBadgeText  = document.getElementById('auto-badge-text');
+  const currencyNote   = document.getElementById('currency-note');
+
+  /* ── 유틸 ── */
+  function fmtPrice(n, sym) {
+    sym = sym || '원';
+    if (sym === '원') {
+      if (Math.abs(n) >= 1e4) return Math.round(n).toLocaleString('ko-KR') + '원';
+      return Math.round(n) + '원';
+    }
+    return sym + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function setStatus(msg, type) {
+    // type: 'error' | 'ok' | 'info'
+    fetchStatus.classList.remove('hidden');
+    fetchStatus.className = 'mt-3 flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-mono ';
+    if (type === 'error') fetchStatus.className += 'bg-red-500/10 border border-red-500/20 text-red-400';
+    else if (type === 'ok') fetchStatus.className += 'bg-brand/8 border border-brand/20 text-brand';
+    else fetchStatus.className += 'bg-white/4 border border-white/8 text-zinc-500';
+    fetchStatus.textContent = msg;
+  }
+
+  function setLoading(on) {
+    searchBtn.disabled = on;
+    searchIcon.classList.toggle('hidden', on);
+    loadingIcon.classList.toggle('hidden', !on);
+  }
+
+  function closeDropdown() { dropdown.classList.add('hidden'); dropdown.innerHTML = ''; }
+
+  /* ── CORS 프록시 fetch ── */
+  async function proxyFetch(url) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT);
+    try {
+      const res = await fetch(PROXY + encodeURIComponent(url), { signal: ctrl.signal });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return await res.json();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  /* ── Yahoo Finance 검색 ── */
+  async function searchYF(query) {
+    const url = YF + '/v1/finance/search?q=' + encodeURIComponent(query) +
+      '&quotesCount=7&newsCount=0&enableFuzzyQuery=false';
+    const data = await proxyFetch(url);
+    return (data.quotes || []).filter(q => q.quoteType === 'EQUITY' || q.quoteType === 'ETF');
+  }
+
+  /* ── Yahoo Finance quoteSummary ── */
+  async function fetchQuote(ticker) {
+    const url = YF + '/v10/finance/quoteSummary/' + encodeURIComponent(ticker) +
+      '?modules=defaultKeyStatistics%2Cprice';
+    const data = await proxyFetch(url);
+    const result = data?.quoteSummary?.result?.[0];
+    if (!result) throw new Error('데이터 없음');
+    return result;
+  }
+
+  /* ── 검색 결과 드롭다운 렌더링 ── */
+  function renderDropdown(quotes) {
+    dropdown.innerHTML = '';
+    if (!quotes.length) {
+      dropdown.innerHTML = '<p class="px-4 py-3 text-xs text-zinc-600">검색 결과가 없습니다.</p>';
+      dropdown.classList.remove('hidden');
+      return;
+    }
+    quotes.forEach(q => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'w-full flex items-center justify-between px-4 py-3 text-left text-sm transition hover:bg-white/5 border-b border-white/5 last:border-0';
+      btn.innerHTML = `
+        <span>
+          <span class="font-medium text-white">${q.shortname || q.longname || q.symbol}</span>
+          <span class="ml-2 font-mono text-xs text-zinc-500">${q.symbol}</span>
+        </span>
+        <span class="ml-4 flex-shrink-0 flex items-center gap-2">
+          <span class="font-mono text-[10px] text-zinc-600">${q.exchDisp || q.exchange || ''}</span>
+          <span class="rounded border border-white/10 px-1.5 py-0.5 font-mono text-[10px] text-zinc-600">${q.quoteType}</span>
+        </span>
+      `;
+      btn.addEventListener('click', () => {
+        searchInput.value = q.shortname || q.symbol;
+        closeDropdown();
+        loadTicker(q.symbol, q.shortname || q.symbol);
+      });
+      dropdown.appendChild(btn);
+    });
+    dropdown.classList.remove('hidden');
+  }
+
+  /* ── 종목 데이터 불러와서 필드 채우기 ── */
+  async function loadTicker(ticker, displayName) {
+    setLoading(true);
+    setStatus('데이터를 불러오는 중...', 'info');
+    autoBadge.classList.add('hidden');
+
+    try {
+      const result = await fetchQuote(ticker);
+      const price  = result.price;
+      const stats  = result.defaultKeyStatistics;
+
+      const currentPrice = price?.regularMarketPrice?.raw;
+      const eps          = stats?.trailingEps?.raw;
+      const bps          = stats?.bookValue?.raw;
+      const currency     = price?.currency || 'KRW';
+      const currSym      = currency === 'KRW' ? '원' : (currency === 'USD' ? '$' : currency);
+
+      // 단위 업데이트
+      ['unit-price', 'unit-eps', 'unit-bps'].forEach(id => {
+        document.getElementById(id).textContent = currSym;
+      });
+
+      if (currency !== 'KRW') {
+        currencyNote.textContent = '통화: ' + currency;
+        currencyNote.classList.remove('hidden');
+      } else {
+        currencyNote.classList.add('hidden');
+      }
+
+      // 필드 채우기
+      const filled = [];
+      const missing = [];
+
+      if (currentPrice != null) {
+        document.getElementById('price').value = Math.round(currentPrice);
+        filled.push('주가');
+      } else { missing.push('주가'); }
+
+      if (eps != null) {
+        document.getElementById('eps').value = currency === 'KRW' ? Math.round(eps) : parseFloat(eps.toFixed(2));
+        document.getElementById('eps-status').textContent = '자동입력';
+        document.getElementById('eps-status').className = 'font-mono text-[10px] text-brand';
+        document.getElementById('eps-status').classList.remove('hidden');
+        filled.push('EPS');
+      } else {
+        document.getElementById('eps-status').textContent = '데이터 없음 — 직접 입력';
+        document.getElementById('eps-status').className = 'font-mono text-[10px] text-zinc-600';
+        document.getElementById('eps-status').classList.remove('hidden');
+        missing.push('EPS');
+      }
+
+      if (bps != null) {
+        document.getElementById('bps').value = currency === 'KRW' ? Math.round(bps) : parseFloat(bps.toFixed(2));
+        document.getElementById('bps-status').textContent = '자동입력';
+        document.getElementById('bps-status').className = 'font-mono text-[10px] text-brand';
+        document.getElementById('bps-status').classList.remove('hidden');
+        filled.push('BPS');
+      } else {
+        document.getElementById('bps-status').textContent = '데이터 없음 — 직접 입력';
+        document.getElementById('bps-status').className = 'font-mono text-[10px] text-zinc-600';
+        document.getElementById('bps-status').classList.remove('hidden');
+        missing.push('BPS');
+      }
+
+      // 배지
+      autoBadgeText.textContent = (displayName || ticker) + ' [' + ticker + '] · ' + filled.join('·') + ' 자동입력';
+      autoBadge.classList.remove('hidden');
+
+      if (missing.length) {
+        setStatus('⚠ ' + missing.join(', ') + ' 데이터가 없습니다. 아래 필드를 직접 입력해주세요.', 'info');
+      } else {
+        setStatus('✓ ' + (displayName || ticker) + ' 데이터를 성공적으로 불러왔습니다.', 'ok');
+      }
+
+      calculate();
+
+    } catch (err) {
+      const msg = err.name === 'AbortError'
+        ? '요청 시간이 초과됐습니다. 잠시 후 다시 시도해주세요.'
+        : '데이터를 불러오지 못했습니다: ' + (err.message || '알 수 없는 오류');
+      setStatus('✕ ' + msg, 'error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /* ── 검색 실행 ── */
+  async function doSearch() {
+    const query = searchInput.value.trim();
+    if (!query) return;
+    closeDropdown();
+
+    // 티커 형식 직접 감지 (6자리 숫자 → 한국 주식, .KS/.KQ 포함)
+    if (/^\d{6}(\.(KS|KQ))?$/i.test(query)) {
+      const ticker = /\./.test(query) ? query.toUpperCase() : query + '.KS';
+      loadTicker(ticker, ticker);
+      return;
+    }
+    // US 티커 패턴 (1-5개 대문자, ^/- 허용)
+    if (/^[A-Z^][A-Z0-9\-]{0,5}(\.(KS|KQ|T|L|PA|AS))?$/i.test(query) && !query.includes(' ')) {
+      loadTicker(query.toUpperCase(), query.toUpperCase());
+      return;
+    }
+
+    // 종목명 검색
+    setLoading(true);
+    setStatus('검색 중...', 'info');
+    try {
+      const quotes = await searchYF(query);
+      renderDropdown(quotes);
+      fetchStatus.classList.add('hidden');
+    } catch (err) {
+      setStatus('✕ 검색 실패: ' + (err.message || '네트워크 오류'), 'error');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  searchBtn.addEventListener('click', doSearch);
+  searchInput.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+  document.addEventListener('click', e => {
+    if (!dropdown.contains(e.target) && e.target !== searchInput) closeDropdown();
+  });
+
+  /* ── 적정가 계산 ── */
+  function fmtResult(n) {
+    const sym = document.getElementById('unit-price').textContent;
+    if (sym === '원') {
+      if (Math.abs(n) >= 1e4) return Math.round(n).toLocaleString('ko-KR') + '원';
+      return Math.round(n) + '원';
+    }
+    return sym + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   function setMethod(prefix, fairValue, currentPrice) {
-    const fairEl   = document.getElementById(prefix + '-fair');
-    const barEl    = document.getElementById(prefix + '-bar');
-    const barWrap  = document.getElementById(prefix + '-bar-wrap');
-    const badgeEl  = document.getElementById(prefix + '-badge');
-    const dotEl    = document.getElementById(prefix + '-dot');
-    const labelEl  = document.getElementById(prefix + '-label');
-    const gapEl    = document.getElementById(prefix + '-gap');
+    const fairEl  = document.getElementById(prefix + '-fair');
+    const barEl   = document.getElementById(prefix + '-bar');
+    const barWrap = document.getElementById(prefix + '-bar-wrap');
+    const badgeEl = document.getElementById(prefix + '-badge');
+    const dotEl   = document.getElementById(prefix + '-dot');
+    const labelEl = document.getElementById(prefix + '-label');
+    const gapEl   = document.getElementById(prefix + '-gap');
 
-    if (fairValue <= 0 || isNaN(fairValue)) {
+    if (!fairValue || fairValue <= 0 || isNaN(fairValue)) {
       fairEl.textContent = '계산 불가';
       fairEl.className = 'font-mono text-2xl font-bold text-zinc-600 mb-3';
       barWrap.classList.add('hidden');
       badgeEl.classList.add('hidden');
-      gapEl.textContent = 'EPS 또는 BPS 값을 확인해주세요';
+      gapEl.textContent = 'EPS 또는 BPS를 입력해주세요';
+      gapEl.className = 'mt-2 font-mono text-sm text-zinc-600';
       return null;
     }
 
-    fairEl.textContent = fmtPrice(fairValue);
+    fairEl.textContent = fmtResult(fairValue);
     fairEl.className = 'font-mono text-2xl font-bold text-white mb-3';
+
+    if (!currentPrice || currentPrice <= 0) {
+      barWrap.classList.add('hidden');
+      badgeEl.classList.add('hidden');
+      gapEl.textContent = '현재 주가를 입력하면 괴리율이 표시됩니다';
+      gapEl.className = 'mt-2 font-mono text-sm text-zinc-600';
+      return fairValue;
+    }
+
     barWrap.classList.remove('hidden');
     badgeEl.classList.remove('hidden');
 
-    const ratio = currentPrice / fairValue; // 1 = 적정, <1 저평가, >1 고평가
+    const ratio  = currentPrice / fairValue;
     const gapPct = ((ratio - 1) * 100).toFixed(1);
-    const barPct = Math.max(5, Math.min(95, (ratio / 2) * 100)); // 0.5배=25%, 1배=50%, 2배=100%
+    const barPct = Math.max(5, Math.min(95, (ratio / 2) * 100));
 
     barEl.style.width = barPct + '%';
 
-    let color, label;
     if (ratio < 0.8) {
-      color = '#3ECF8E'; label = '저평가';
       badgeEl.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs bg-brand/10 border border-brand/30';
-      dotEl.className = 'h-1.5 w-1.5 rounded-full bg-brand';
-      labelEl.className = 'text-brand';
-      barEl.className = 'h-full rounded-full bg-brand transition-all duration-300';
+      dotEl.className   = 'h-1.5 w-1.5 rounded-full bg-brand';
+      labelEl.className = 'text-brand'; labelEl.textContent = '저평가';
+      barEl.className   = 'h-full rounded-full bg-brand transition-all duration-300';
+      gapEl.className   = 'mt-2 font-mono text-sm text-brand';
     } else if (ratio <= 1.2) {
-      color = '#f6c90e'; label = '적정';
       badgeEl.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs bg-yellow-500/10 border border-yellow-500/30';
-      dotEl.className = 'h-1.5 w-1.5 rounded-full bg-yellow-400';
-      labelEl.className = 'text-yellow-400';
-      barEl.className = 'h-full rounded-full bg-yellow-400 transition-all duration-300';
+      dotEl.className   = 'h-1.5 w-1.5 rounded-full bg-yellow-400';
+      labelEl.className = 'text-yellow-400'; labelEl.textContent = '적정';
+      barEl.className   = 'h-full rounded-full bg-yellow-400 transition-all duration-300';
+      gapEl.className   = 'mt-2 font-mono text-sm text-yellow-400';
     } else {
-      color = '#f56565'; label = '고평가';
       badgeEl.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs bg-red-500/10 border border-red-500/30';
-      dotEl.className = 'h-1.5 w-1.5 rounded-full bg-red-400';
-      labelEl.className = 'text-red-400';
-      barEl.className = 'h-full rounded-full bg-red-400 transition-all duration-300';
+      dotEl.className   = 'h-1.5 w-1.5 rounded-full bg-red-400';
+      labelEl.className = 'text-red-400'; labelEl.textContent = '고평가';
+      barEl.className   = 'h-full rounded-full bg-red-400 transition-all duration-300';
+      gapEl.className   = 'mt-2 font-mono text-sm text-red-400';
     }
-    labelEl.textContent = label;
 
     const sign = gapPct > 0 ? '+' : '';
     gapEl.textContent = '현재가 대비 ' + sign + gapPct + '%';
-    gapEl.className = 'mt-2 font-mono text-sm ' + (ratio < 0.8 ? 'text-brand' : ratio <= 1.2 ? 'text-yellow-400' : 'text-red-400');
-
     return fairValue;
   }
 
   function calculate() {
-    const price    = parseFloat(document.getElementById('price').value)      || 0;
-    const eps      = parseFloat(document.getElementById('eps').value)        || 0;
-    const bps      = parseFloat(document.getElementById('bps').value)        || 0;
+    const price     = parseFloat(document.getElementById('price').value)      || 0;
+    const eps       = parseFloat(document.getElementById('eps').value)        || 0;
+    const bps       = parseFloat(document.getElementById('bps').value)        || 0;
     const targetPer = parseFloat(document.getElementById('target-per').value) || 15;
     const targetPbr = parseFloat(document.getElementById('target-pbr').value) || 1.5;
 
-    // 현재 PER / PBR
     document.getElementById('current-per').textContent = (price > 0 && eps > 0) ? (price / eps).toFixed(1) + '배' : '—';
     document.getElementById('current-pbr').textContent = (price > 0 && bps > 0) ? (price / bps).toFixed(2) + '배' : '—';
 
-    // 3가지 적정가
-    const perFair    = eps > 0 ? eps * targetPer : -1;
-    const pbrFair    = bps > 0 ? bps * targetPbr : -1;
-    const grahamFair = (eps > 0 && bps > 0) ? Math.sqrt(22.5 * eps * bps) : -1;
+    const v1 = setMethod('per',    eps > 0 ? eps * targetPer : -1,              price);
+    const v2 = setMethod('pbr',    bps > 0 ? bps * targetPbr : -1,             price);
+    const v3 = setMethod('graham', (eps > 0 && bps > 0) ? Math.sqrt(22.5 * eps * bps) : -1, price);
 
-    const v1 = setMethod('per',    perFair,    price);
-    const v2 = setMethod('pbr',    pbrFair,    price);
-    const v3 = setMethod('graham', grahamFair, price);
-
-    // 종합 평균
-    const validValues = [v1, v2, v3].filter(v => v !== null && v > 0);
-    const consensusWrap = document.getElementById('consensus-wrap');
-    if (validValues.length > 0 && price > 0) {
-      const avg = validValues.reduce((s, v) => s + v, 0) / validValues.length;
-      const ratio = price / avg;
+    const valid = [v1, v2, v3].filter(v => v !== null && v > 0);
+    const wrap  = document.getElementById('consensus-wrap');
+    if (valid.length > 0 && price > 0) {
+      const avg    = valid.reduce((s, v) => s + v, 0) / valid.length;
+      const ratio  = price / avg;
       const gapPct = ((ratio - 1) * 100).toFixed(1);
-      const sign = gapPct > 0 ? '+' : '';
-
-      document.getElementById('consensus-price').textContent = fmtPrice(avg) + ' (현재가 대비 ' + sign + gapPct + '%)';
-
+      const sign   = gapPct > 0 ? '+' : '';
+      document.getElementById('consensus-price').textContent = fmtResult(avg) + ' (현재가 대비 ' + sign + gapPct + '%)';
       const cb = document.getElementById('consensus-badge');
-      if (ratio < 0.8) {
-        cb.textContent = '저평가';
-        cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-brand/10 border border-brand/30 text-brand';
-      } else if (ratio <= 1.2) {
-        cb.textContent = '적정';
-        cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-yellow-500/10 border border-yellow-500/30 text-yellow-400';
-      } else {
-        cb.textContent = '고평가';
-        cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-400';
-      }
-      consensusWrap.classList.remove('hidden');
+      if (ratio < 0.8) { cb.textContent = '저평가'; cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-brand/10 border border-brand/30 text-brand'; }
+      else if (ratio <= 1.2) { cb.textContent = '적정'; cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-yellow-500/10 border border-yellow-500/30 text-yellow-400'; }
+      else { cb.textContent = '고평가'; cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-400'; }
+      wrap.classList.remove('hidden');
     } else {
-      consensusWrap.classList.add('hidden');
+      wrap.classList.add('hidden');
     }
   }
 

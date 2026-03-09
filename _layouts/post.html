@@ -7,14 +7,14 @@ layout: default
   <!-- Back -->
   <a href="{{ '/' | relative_url }}" class="inline-flex items-center gap-1.5 font-mono text-xs text-zinc-600 hover:text-brand mb-10 transition-colors">
     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-    ← back to blog
+    back to blog
   </a>
 
   <!-- Post Header -->
   <header class="mb-10">
     <div class="mb-3 flex flex-wrap items-center gap-2">
       {% for cat in page.categories %}
-      <span class="rounded-sm bg-brand/10 px-2 py-0.5 font-mono text-xs font-medium text-brand">{{ cat }}</span>
+      <span class="inline-flex items-center rounded border border-brand/25 bg-brand/8 px-2 py-0.5 font-mono text-[10px] font-medium text-brand">{{ cat }}</span>
       {% endfor %}
       <time datetime="{{ page.date | date_to_xmlschema }}" class="font-mono text-xs text-zinc-600">
         {{ page.date | date: "%Y-%m-%d" }}
@@ -26,14 +26,14 @@ layout: default
     </h1>
 
     {% if page.tags.size > 0 %}
-    <div class="mt-4 flex flex-wrap gap-2">
+    <div class="mt-4 flex flex-wrap gap-1.5">
       {% for tag in page.tags %}
-      <span class="font-mono text-xs text-zinc-600 bg-white/4 rounded px-2 py-1">#{{ tag }}</span>
+      <span class="rounded border border-white/[0.08] bg-white/[0.03] px-2 py-0.5 font-mono text-[11px] text-zinc-500">#{{ tag }}</span>
       {% endfor %}
     </div>
     {% endif %}
 
-    <div class="mt-6 border-t border-white/8"></div>
+    <div class="mt-6 h-px bg-gradient-to-r from-brand/20 via-white/[0.06] to-transparent"></div>
   </header>
 
   <!-- Post Content -->
@@ -46,36 +46,38 @@ layout: default
     prose-strong:text-zinc-200 prose-strong:font-semibold
     prose-li:text-zinc-400 prose-li:leading-relaxed
     prose-blockquote:border-l-brand prose-blockquote:text-zinc-500
-    prose-code:text-brand prose-code:bg-white/5 prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-xs prose-code:before:content-none prose-code:after:content-none
-    prose-pre:bg-[#1a1a1a] prose-pre:border prose-pre:border-white/8 prose-pre:rounded-xl
-    prose-hr:border-white/8
+    prose-code:text-brand prose-code:bg-white/[0.06] prose-code:rounded prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-xs prose-code:before:content-none prose-code:after:content-none
+    prose-pre:bg-[#141414] prose-pre:border prose-pre:border-white/[0.07] prose-pre:rounded-xl
+    prose-hr:border-white/[0.08]
     prose-table:text-sm prose-th:text-zinc-300 prose-th:font-medium prose-td:text-zinc-400">
     {{ content }}
   </div>
 
   <!-- Disclaimer -->
-  <div class="mt-14 rounded-xl border border-white/8 bg-[#1a1a1a] p-5">
+  <div class="mt-14 rounded-xl border border-white/[0.06] bg-[#111111] p-5">
     <p class="font-mono text-xs leading-relaxed text-zinc-600">
       ⚠️ 이 포스트는 교육 및 정보 제공 목적으로만 작성되었습니다. 투자 자문이 아니며, 모든 투자 결정은 본인의 책임입니다.
     </p>
   </div>
-  <!-- AdFit: PC (md 이상) -->
-  <div class="mt-10 hidden md:flex justify-center">
+
+  <!-- AdFit: PC -->
+  <div class="mt-8 hidden md:flex justify-center">
     <ins class="kakao_ad_area" style="display:none;"
-    data-ad-unit = "DAN-Tg2vsj9NPcSmilIN"
-    data-ad-width = "728"
-    data-ad-height = "90"></ins>
+      data-ad-unit="DAN-Tg2vsj9NPcSmilIN"
+      data-ad-width="728"
+      data-ad-height="90"></ins>
   </div>
-  <!-- AdFit: Mobile (md 미만) -->
-  <div class="mt-10 flex justify-center md:hidden">
+  <!-- AdFit: Mobile -->
+  <div class="mt-8 flex justify-center md:hidden">
     <ins class="kakao_ad_area" style="display:none;"
-    data-ad-unit = "DAN-S7Z4M0GuQWiVVG0s"
-    data-ad-width = "320"
-    data-ad-height = "100"></ins>
+      data-ad-unit="DAN-S7Z4M0GuQWiVVG0s"
+      data-ad-width="320"
+      data-ad-height="100"></ins>
   </div>
   <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+
   <!-- Back Bottom -->
-  <div class="mt-10 pt-6 border-t border-white/8">
+  <div class="mt-10 pt-6 border-t border-white/[0.06]">
     <a href="{{ '/' | relative_url }}" class="inline-flex items-center gap-1.5 font-mono text-xs text-zinc-600 hover:text-brand transition-colors">
       ← back to blog
     </a>

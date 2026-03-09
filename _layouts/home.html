@@ -3,11 +3,15 @@ layout: default
 ---
 
 <!-- Hero -->
-<section class="relative overflow-hidden px-4 pt-10 pb-10 sm:px-6 sm:pt-20 sm:pb-16">
-  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(62,207,142,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(62,207,142,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+<section class="relative overflow-hidden px-4 pt-14 pb-12 sm:px-6 sm:pt-24 sm:pb-20">
+  <!-- Grid pattern -->
+  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(62,207,142,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(62,207,142,0.025)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+  <!-- Radial glow blob -->
+  <div class="pointer-events-none absolute inset-x-0 -top-20 h-[420px] bg-[radial-gradient(ellipse_60%_55%_at_50%_15%,rgba(62,207,142,0.11),transparent_70%)]"></div>
 
   <div class="relative mx-auto max-w-4xl text-center">
-    <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/8 px-4 py-1.5 text-xs font-medium text-brand">
+    <!-- Badge -->
+    <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/8 px-4 py-1.5 text-xs font-medium text-brand backdrop-blur-sm">
       <span class="relative flex h-1.5 w-1.5">
         <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75"></span>
         <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand"></span>
@@ -15,14 +19,28 @@ layout: default
       BlackRabbit LAB 블로그
     </div>
 
-    <h2 class="text-2xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+    <!-- Title -->
+    <h2 class="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
       투자·경제 교육 블로그
     </h2>
 
-    <p class="mx-auto mt-4 max-w-2xl text-sm text-zinc-500 sm:text-base lg:text-lg">
+    <p class="mx-auto mt-4 max-w-2xl text-sm text-zinc-500 sm:text-base">
       주식 · ETF · 거시경제 · 재테크<br class="sm:hidden" />
       복잡한 투자 개념을 쉽게 풀어 누구나 경제를 공부할 수 있도록 돕습니다.
     </p>
+
+    <!-- Quick links -->
+    <div class="mt-7 flex flex-wrap justify-center gap-2">
+      <a href="{{ '/tools/' | relative_url }}"
+        class="inline-flex items-center gap-1.5 rounded-lg border border-brand/30 bg-brand/10 px-4 py-2 text-sm font-medium text-brand transition hover:bg-brand/20 hover:border-brand/50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        투자 계산기
+      </a>
+      <a href="https://blackrabbitlab.site" target="_blank" rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:text-white">
+        STOCKER 바로가기 ↗
+      </a>
+    </div>
   </div>
 </section>
 
@@ -32,30 +50,30 @@ layout: default
   <!-- Search + Filter Bar -->
   <div class="mb-6 space-y-3">
 
-    <!-- Search input -->
+    <!-- Search -->
     <div class="relative">
-      <svg class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-600" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-600" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <input
         id="search-input"
         type="search"
         placeholder="포스트 검색..."
         autocomplete="off"
-        class="w-full rounded-xl border border-white/8 bg-[#111111] py-3 pl-10 pr-10 font-mono text-sm text-white placeholder-zinc-600 outline-none transition focus:border-brand/40 focus:ring-1 focus:ring-brand/20"
+        class="w-full rounded-xl border border-white/[0.08] bg-[#111111] py-2.5 pl-10 pr-10 font-mono text-sm text-white placeholder-zinc-700 outline-none transition focus:border-brand/35 focus:ring-1 focus:ring-brand/15 focus:bg-[#131313]"
       />
       <button
         id="search-clear"
         class="absolute right-3.5 top-1/2 -translate-y-1/2 hidden text-zinc-600 hover:text-zinc-400 transition"
         aria-label="검색어 지우기"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
 
     <!-- Category filter pills -->
-    <div class="flex flex-wrap gap-2" id="filter-pills">
+    <div class="flex flex-wrap gap-1.5" id="filter-pills">
       <button
         data-filter="all"
-        class="filter-pill active rounded-full border border-brand/40 bg-brand/10 px-3 py-1 font-mono text-xs font-medium text-brand transition"
+        class="filter-pill active rounded-full border border-brand/35 bg-brand/10 px-3 py-1 font-mono text-xs font-medium text-brand transition"
       >전체</button>
       {% assign all_cats = "" %}
       {% for post in site.posts %}
@@ -70,7 +88,7 @@ layout: default
       {% if cat != "" %}
       <button
         data-filter="{{ cat }}"
-        class="filter-pill rounded-full border border-white/10 px-3 py-1 font-mono text-xs text-zinc-500 transition hover:border-white/20 hover:text-zinc-300"
+        class="filter-pill rounded-full border border-white/[0.08] px-3 py-1 font-mono text-xs text-zinc-500 transition hover:border-white/20 hover:text-zinc-300"
       >{{ cat }}</button>
       {% endif %}
       {% endfor %}
@@ -78,38 +96,46 @@ layout: default
   </div>
 
   <!-- Result count -->
-  <div class="mb-4 flex items-center justify-between">
-    <p id="result-count" class="font-mono text-xs text-zinc-600">{{ site.posts.size }} posts</p>
+  <div class="mb-4">
+    <p id="result-count" class="font-mono text-xs text-zinc-700">{{ site.posts.size }} posts</p>
   </div>
 
   <!-- Post cards -->
-  <div id="post-list" class="grid gap-4">
+  <div id="post-list" class="grid gap-3">
     {% for post in site.posts %}
     {% assign excerpt_text = post.content | strip_html | truncate: 300 %}
     {% assign cat_joined = post.categories | join: " " %}
     <a
       href="{{ post.url | relative_url }}"
-      class="post-card group block rounded-xl border border-white/8 bg-[#111111] p-5 text-left no-underline transition-all hover:border-brand/25 hover:bg-[#161616] sm:p-6"
+      class="post-card group block rounded-xl border border-white/[0.08] bg-[#111111] p-5 text-left no-underline sm:p-6"
       data-title="{{ post.title | downcase | escape }}"
       data-categories="{{ cat_joined | downcase | escape }}"
       data-excerpt="{{ excerpt_text | downcase | escape }}"
       data-tags="{{ post.tags | join: ' ' | downcase | escape }}"
     >
+      <!-- Meta row -->
       <div class="mb-2.5 flex flex-wrap items-center gap-2">
         {% for cat in post.categories %}
-        <span class="post-cat rounded-sm bg-brand/10 px-2 py-0.5 font-mono text-xs font-medium text-brand">{{ cat }}</span>
+        <span class="post-cat inline-flex items-center rounded border border-brand/25 bg-brand/8 px-2 py-0.5 font-mono text-[10px] font-medium text-brand">{{ cat }}</span>
         {% endfor %}
-        <time datetime="{{ post.date | date_to_xmlschema }}" class="font-mono text-xs text-zinc-600">
+        <time datetime="{{ post.date | date_to_xmlschema }}" class="font-mono text-[11px] text-zinc-600">
           {{ post.date | date: "%Y-%m-%d" }}
         </time>
       </div>
+
+      <!-- Title -->
       <h3 class="post-title text-base font-semibold leading-snug text-white transition-colors group-hover:text-brand sm:text-lg">
         {{ post.title }}
       </h3>
+
+      <!-- Excerpt -->
       <p class="mt-1.5 text-sm leading-relaxed text-zinc-600 line-clamp-2">{{ excerpt_text }}</p>
-      <span class="mt-3 inline-flex items-center gap-1 font-mono text-xs text-brand opacity-0 transition-opacity group-hover:opacity-100">
-        read more →
-      </span>
+
+      <!-- Read more -->
+      <div class="mt-3 flex items-center gap-1 font-mono text-xs text-brand opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5">
+        읽기
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
     </a>
     {% if forloop.index == 4 or forloop.index == 8 %}
     <!-- AdFit 300x250 -->
@@ -125,13 +151,13 @@ layout: default
   <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 
   <!-- Empty state -->
-  <div id="no-results" class="hidden rounded-xl border border-white/8 bg-[#111111] p-14 text-center">
+  <div id="no-results" class="hidden rounded-xl border border-white/[0.06] bg-[#111111] p-14 text-center">
     <p class="font-mono text-sm text-zinc-600">검색 결과가 없습니다.</p>
     <button id="reset-btn" class="mt-4 font-mono text-xs text-brand hover:underline">필터 초기화</button>
   </div>
 
   {% if site.posts.size == 0 %}
-  <div class="rounded-xl border border-white/8 bg-[#111111] p-12 text-center">
+  <div class="rounded-xl border border-white/[0.06] bg-[#111111] p-12 text-center">
     <p class="text-zinc-600">아직 작성된 포스트가 없습니다.</p>
   </div>
   {% endif %}
@@ -151,9 +177,7 @@ layout: default
   var activeFilter = 'all';
   var searchQuery  = '';
 
-  function normalize(str) {
-    return (str || '').toLowerCase().trim();
-  }
+  function normalize(str) { return (str || '').toLowerCase().trim(); }
 
   function applyFilters() {
     var q   = normalize(searchQuery);
@@ -175,37 +199,30 @@ layout: default
     });
 
     resultCount.textContent = visible + ' posts';
-    var wasHidden = !noResults.classList.contains('hidden');
     noResults.classList.toggle('hidden', visible > 0);
 
-    // 결과 없을 때 검색어를 Google Forms에 기록
-    if (visible === 0 && q.length >= 2) {
-      reportNoResult(q);
-    }
+    if (visible === 0 && q.length >= 2) reportNoResult(q);
   }
 
   var _lastReported = '';
   var _reportTimer = null;
   function reportNoResult(query) {
     clearTimeout(_reportTimer);
-    _reportTimer = setTimeout(function() {
+    _reportTimer = setTimeout(function () {
       if (query === _lastReported) return;
       _lastReported = query;
       var url = 'https://docs.google.com/forms/d/e/1FAIpQLSf_qc94k_BleB_Efjx-GchPSh0mzazzGO91jZb3gqvdRCN3aQ/formResponse'
-              + '?entry.714347720=' + encodeURIComponent(query)
-              + '&submit=Submit';
-      fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function(){});
-    }, 1500); // 타이핑 멈춘 후 1.5초 뒤 전송
+              + '?entry.714347720=' + encodeURIComponent(query) + '&submit=Submit';
+      fetch(url, { method: 'GET', mode: 'no-cors' }).catch(function () {});
+    }, 1500);
   }
 
-  // Search input
   searchInput.addEventListener('input', function () {
     searchQuery = this.value;
     searchClear.style.display = searchQuery ? '' : 'none';
     applyFilters();
   });
 
-  // Clear button
   searchClear.addEventListener('click', function () {
     searchInput.value = '';
     searchQuery = '';
@@ -214,40 +231,34 @@ layout: default
     applyFilters();
   });
 
-  // Category pills
   filterPills.forEach(function (pill) {
     pill.addEventListener('click', function () {
       activeFilter = this.dataset.filter;
-
       filterPills.forEach(function (p) {
-        p.classList.remove('active', 'border-brand/40', 'bg-brand/10', 'text-brand');
-        p.classList.add('border-white/10', 'text-zinc-500');
+        p.classList.remove('active', 'border-brand/35', 'bg-brand/10', 'text-brand');
+        p.classList.add('border-white/[0.08]', 'text-zinc-500');
       });
-      this.classList.add('active', 'border-brand/40', 'bg-brand/10', 'text-brand');
-      this.classList.remove('border-white/10', 'text-zinc-500');
-
+      this.classList.add('active', 'border-brand/35', 'bg-brand/10', 'text-brand');
+      this.classList.remove('border-white/[0.08]', 'text-zinc-500');
       applyFilters();
     });
   });
 
-  // Reset button (in no-results state)
   if (resetBtn) {
     resetBtn.addEventListener('click', function () {
       searchInput.value = '';
       searchQuery = '';
       searchClear.style.display = 'none';
       activeFilter = 'all';
-
       filterPills.forEach(function (p) {
-        p.classList.remove('active', 'border-brand/40', 'bg-brand/10', 'text-brand');
-        p.classList.add('border-white/10', 'text-zinc-500');
+        p.classList.remove('active', 'border-brand/35', 'bg-brand/10', 'text-brand');
+        p.classList.add('border-white/[0.08]', 'text-zinc-500');
       });
       var allPill = document.querySelector('[data-filter="all"]');
       if (allPill) {
-        allPill.classList.add('active', 'border-brand/40', 'bg-brand/10', 'text-brand');
-        allPill.classList.remove('border-white/10', 'text-zinc-500');
+        allPill.classList.add('active', 'border-brand/35', 'bg-brand/10', 'text-brand');
+        allPill.classList.remove('border-white/[0.08]', 'text-zinc-500');
       }
-
       applyFilters();
     });
   }

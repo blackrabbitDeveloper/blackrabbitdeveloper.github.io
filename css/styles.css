@@ -1,12 +1,25 @@
+/* ── Global ── */
 html {
   scroll-behavior: smooth;
 }
 
 body {
   overflow-x: hidden;
+  background-color: #0a0a0a;
+  /* Ambient top glow */
+  background-image: radial-gradient(ellipse 80% 35% at 50% -5%, rgba(62,207,142,0.07), transparent);
 }
 
-/* Skip link (a11y) */
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #242424; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(62,207,142,0.35); }
+
+/* ── Text selection ── */
+::selection { background: rgba(62,207,142,0.18); color: #fff; }
+
+/* ── Skip link (a11y) ── */
 .skip-link {
   position: fixed;
   left: 1rem;
@@ -27,7 +40,51 @@ body {
   outline-offset: 2px;
 }
 
-/* Line clamp utility */
+/* ── Post cards (blog listing) ── */
+.post-card {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(255,255,255,0.08);
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.post-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(62,207,142,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.post-card:hover {
+  border-color: rgba(62,207,142,0.25);
+  background-color: #121212;
+  box-shadow:
+    0 8px 40px -12px rgba(62,207,142,0.14),
+    0 0 0 1px rgba(62,207,142,0.06) inset;
+}
+.post-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Generic card glow (툴 페이지 등) ── */
+.card-glow {
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.card-glow:hover {
+  box-shadow: 0 8px 40px -12px rgba(62,207,142,0.14), 0 0 0 1px rgba(62,207,142,0.07) inset;
+}
+
+/* ── Line clamp utilities ── */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -35,7 +92,7 @@ body {
   overflow: hidden;
 }
 
-/* Prose table fix */
+/* ── Prose table fix ── */
 .prose table {
   border-collapse: collapse;
   width: 100%;
@@ -53,8 +110,35 @@ body {
   white-space: nowrap;
 }
 
-/* Code block syntax highlight */
+/* ── Code block ── */
 .highlight {
   border-radius: 0.5rem;
   overflow: hidden;
+}
+
+/* ── Nav active link ── */
+.nav-link-active {
+  color: #fff !important;
+  background-color: rgba(255,255,255,0.06) !important;
+}
+
+/* ── Section label (brand accent bar) ── */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #3ECF8E;
+}
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 2px;
+  background: #3ECF8E;
+  border-radius: 1px;
 }

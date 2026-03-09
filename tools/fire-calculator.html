@@ -23,7 +23,7 @@ permalink: /tools/fire-calculator/
 
     <!-- ── 입력 패널 ── -->
     <div class="lg:col-span-2">
-      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 space-y-6">
+      <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-5 space-y-6">
         <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">재무 현황</h2>
 
         <!-- 월 수입 -->
@@ -32,7 +32,7 @@ permalink: /tools/fire-calculator/
             <label for="income" class="text-sm text-zinc-300">월 수입</label>
             <div class="flex items-center gap-1">
               <input id="income" type="number" value="4000000" min="0" max="50000000" step="100000"
-                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-28 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">원</span>
             </div>
           </div>
@@ -49,7 +49,7 @@ permalink: /tools/fire-calculator/
             <label for="expense" class="text-sm text-zinc-300">월 생활비</label>
             <div class="flex items-center gap-1">
               <input id="expense" type="number" value="2500000" min="0" max="20000000" step="100000"
-                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-28 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">원</span>
             </div>
           </div>
@@ -67,7 +67,7 @@ permalink: /tools/fire-calculator/
             <label for="assets" class="text-sm text-zinc-300">현재 보유 자산</label>
             <div class="flex items-center gap-1">
               <input id="assets" type="number" value="50000000" min="0" max="2000000000" step="1000000"
-                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-28 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">원</span>
             </div>
           </div>
@@ -84,7 +84,7 @@ permalink: /tools/fire-calculator/
             <label for="rate" class="text-sm text-zinc-300">기대 연 수익률</label>
             <div class="flex items-center gap-1">
               <input id="rate" type="number" value="6" min="0" max="20" step="0.5"
-                class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-16 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">%</span>
             </div>
           </div>
@@ -110,22 +110,22 @@ permalink: /tools/fire-calculator/
           <p id="result-date" class="font-mono text-xs text-zinc-600 mt-1">—</p>
         </div>
 
-        <div class="col-span-2 sm:col-span-1 rounded-xl border border-white/8 bg-[#111111] p-4">
+        <div class="col-span-2 sm:col-span-1 rounded-xl border border-white/[0.08] bg-[#111111] p-4">
           <p class="text-xs text-zinc-500 mb-1.5">FIRE 목표금액</p>
           <p id="result-target" class="font-mono text-2xl font-bold text-white leading-none">—</p>
           <p class="font-mono text-xs text-zinc-600 mt-1">연 생활비 × 25</p>
         </div>
 
-        <div class="rounded-xl border border-white/8 bg-[#111111] p-4">
+        <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-4">
           <p class="text-xs text-zinc-500 mb-1.5">현재 저축률</p>
           <p id="result-saverate" class="font-mono text-lg font-semibold text-zinc-300 leading-none">—</p>
           <p id="result-monthly-save" class="font-mono text-xs text-zinc-600 mt-1">—</p>
         </div>
 
-        <div class="rounded-xl border border-white/8 bg-[#111111] p-4">
+        <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-4">
           <p class="text-xs text-zinc-500 mb-1.5">현재 자산 달성률</p>
           <p id="result-progress" class="font-mono text-lg font-semibold text-zinc-300 leading-none">—</p>
-          <div class="mt-2 h-1.5 w-full rounded-full bg-white/8 overflow-hidden">
+          <div class="mt-2 h-1.5 w-full rounded-full bg-white/[0.08] overflow-hidden">
             <div id="progress-bar" class="h-full rounded-full bg-brand transition-all duration-300" style="width:0%"></div>
           </div>
         </div>
@@ -133,7 +133,7 @@ permalink: /tools/fire-calculator/
       </div>
 
       <!-- 차트 -->
-      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 flex-1">
+      <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-5 flex-1">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">자산 성장 vs FIRE 목표</h3>
           <div class="flex items-center gap-4">

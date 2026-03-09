@@ -23,7 +23,7 @@ permalink: /tools/compound-calculator/
 
     <!-- ── 입력 패널 ── -->
     <div class="lg:col-span-2">
-      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 space-y-6">
+      <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-5 space-y-6">
         <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">투자 조건</h2>
 
         <!-- 초기 투자금 -->
@@ -32,7 +32,7 @@ permalink: /tools/compound-calculator/
             <label for="initial" class="text-sm text-zinc-300">초기 투자금</label>
             <div class="flex items-center gap-1">
               <input id="initial" type="number" value="10000000" min="0" max="1000000000" step="1000000"
-                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-28 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">원</span>
             </div>
           </div>
@@ -50,7 +50,7 @@ permalink: /tools/compound-calculator/
             <label for="monthly" class="text-sm text-zinc-300">월 납입금</label>
             <div class="flex items-center gap-1">
               <input id="monthly" type="number" value="300000" min="0" max="10000000" step="50000"
-                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-28 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">원</span>
             </div>
           </div>
@@ -68,7 +68,7 @@ permalink: /tools/compound-calculator/
             <label for="rate" class="text-sm text-zinc-300">연 수익률</label>
             <div class="flex items-center gap-1">
               <input id="rate" type="number" value="7" min="0" max="100" step="0.5"
-                class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-16 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">%</span>
             </div>
           </div>
@@ -86,7 +86,7 @@ permalink: /tools/compound-calculator/
             <label for="years" class="text-sm text-zinc-300">투자 기간</label>
             <div class="flex items-center gap-1">
               <input id="years" type="number" value="20" min="1" max="50" step="1"
-                class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+                class="w-16 rounded-md bg-white/[0.05] border border-white/[0.08] px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">년</span>
             </div>
           </div>
@@ -112,18 +112,18 @@ permalink: /tools/compound-calculator/
           <p id="result-total" class="font-mono text-2xl font-bold text-brand leading-none">—</p>
         </div>
 
-        <div class="rounded-xl border border-white/8 bg-[#111111] p-4 col-span-2 sm:col-span-1">
+        <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-4 col-span-2 sm:col-span-1">
           <p class="text-xs text-zinc-500 mb-1.5">총 수익</p>
           <p id="result-profit" class="font-mono text-2xl font-bold text-white leading-none">—</p>
           <p id="result-roi" class="font-mono text-xs text-zinc-600 mt-1">—</p>
         </div>
 
-        <div class="rounded-xl border border-white/8 bg-[#111111] p-4">
+        <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-4">
           <p class="text-xs text-zinc-500 mb-1.5">총 납입 원금</p>
           <p id="result-invested" class="font-mono text-lg font-semibold text-zinc-300 leading-none">—</p>
         </div>
 
-        <div class="rounded-xl border border-white/8 bg-[#111111] p-4">
+        <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-4">
           <p class="text-xs text-zinc-500 mb-1.5">복리 배수</p>
           <p id="result-multiple" class="font-mono text-lg font-semibold text-zinc-300 leading-none">—</p>
         </div>
@@ -131,7 +131,7 @@ permalink: /tools/compound-calculator/
       </div>
 
       <!-- 차트 -->
-      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 flex-1">
+      <div class="rounded-xl border border-white/[0.08] bg-[#111111] p-5 flex-1">
         <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-4">연도별 자산 성장</h3>
         <div class="relative" style="height: 220px;">
           <canvas id="growthChart"></canvas>

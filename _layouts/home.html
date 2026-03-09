@@ -111,8 +111,18 @@ layout: default
         read more →
       </span>
     </a>
+    {% if forloop.index == 4 or forloop.index == 8 %}
+    <!-- AdFit 300x250 -->
+    <div class="flex justify-center py-2">
+      <ins class="kakao_ad_area" style="display:none;"
+        data-ad-unit="DAN-eCimrfaC9UFuFmG4"
+        data-ad-width="300"
+        data-ad-height="250"></ins>
+    </div>
+    {% endif %}
     {% endfor %}
   </div>
+  <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 
   <!-- Empty state -->
   <div id="no-results" class="hidden rounded-xl border border-white/8 bg-[#111111] p-14 text-center">

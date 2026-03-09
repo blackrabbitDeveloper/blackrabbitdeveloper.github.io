@@ -104,18 +104,4 @@ description: BlackRabbit LAB이 운영하는 투자·경제 교육 블로그 소
       ⚠️ 이 사이트의 모든 콘텐츠는 교육 및 정보 제공 목적으로만 작성됩니다. 투자 자문이 아니며, 모든 투자 결정은 본인의 판단과 책임 하에 진행하시기 바랍니다. 과거 데이터나 분석 결과가 미래 수익을 보장하지 않습니다.
     </p>
   </div>
-
-  <!-- CTA -->
-  <div class="flex flex-wrap gap-3 pt-2">
-    <a href="{{ '/' | relative_url }}"
-      class="inline-flex items-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-black transition hover:bg-brand/90">
-      블로그 글 보기
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-    </a>
-    <a href="{{ '/tools/' | relative_url }}"
-      class="inline-flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:text-white">
-      투자 계산기
-    </a>
-  </div>
-
 </div>

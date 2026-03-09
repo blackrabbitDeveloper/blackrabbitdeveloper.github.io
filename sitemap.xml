@@ -1,0 +1,42 @@
+---
+layout: null
+sitemap:
+  exclude: 'yes'
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- 홈 -->
+  <url>
+    <loc>{{ site.url }}/</loc>
+    <lastmod>{{ site.time | date: "%Y-%m-%d" }}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 정적 페이지 -->
+  {% for page in site.pages %}
+    {% unless page.sitemap == false or page.url contains 'google' or page.url contains 'naver' or page.url == '/sitemap.xml' or page.url == '/feed.xml' or page.url == '/robots.txt' %}
+    <url>
+      <loc>{{ site.url }}{{ page.url | remove: 'index.html' }}</loc>
+      <lastmod>{{ site.time | date: "%Y-%m-%d" }}</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.6</priority>
+    </url>
+    {% endunless %}
+  {% endfor %}
+
+  <!-- 포스트 -->
+  {% assign posts = site.posts | sort: 'date' | reverse %}
+  {% for post in posts %}
+    {% unless post.sitemap == false %}
+    <url>
+      <loc>{{ site.url }}{{ post.url }}</loc>
+      <lastmod>{{ post.date | date: "%Y-%m-%d" }}</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+    </url>
+    {% endunless %}
+  {% endfor %}
+
+</urlset>

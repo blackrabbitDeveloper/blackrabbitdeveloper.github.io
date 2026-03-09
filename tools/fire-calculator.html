@@ -1,0 +1,349 @@
+---
+layout: default
+title: "FIRE 계산기"
+description: "월수입·생활비·현재자산으로 경제적 독립(FIRE) 달성 시기를 시뮬레이션하는 무료 계산기. 4% 룰 기반."
+permalink: /tools/fire-calculator/
+---
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 pt-10 pb-20">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center gap-1.5 mb-4">
+      <a href="{{ '/' | relative_url }}" class="text-xs text-zinc-600 hover:text-zinc-400 transition">홈</a>
+      <span class="text-zinc-700 text-xs">/</span>
+      <a href="{{ '/tools/' | relative_url }}" class="text-xs text-zinc-600 hover:text-zinc-400 transition">툴</a>
+      <span class="text-zinc-700 text-xs">/</span>
+      <span class="text-xs text-brand">FIRE 계산기</span>
+    </div>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand/15 flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3ECF8E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2c0 0-5 4.5-5 9a5 5 0 0 0 10 0c0-4.5-5-9-5-9z"/><path d="M12 12c0 0-2 1.5-2 3a2 2 0 0 0 4 0c0-1.5-2-3-2-3z"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">FIRE 계산기</h1>
+    </div>
+    <p class="text-sm text-zinc-500 ml-12">현재 재무 상황으로 경제적 독립까지 얼마나 걸리는지 계산합니다.</p>
+    <p class="mt-1 ml-12 inline-flex items-center gap-1.5 rounded-full border border-white/8 bg-white/4 px-3 py-1 font-mono text-[11px] text-zinc-500">
+      4% 룰 기준 — FIRE 목표금액 = 연간 생활비 × 25
+    </p>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid gap-5 lg:grid-cols-5">
+
+    <!-- ── 입력 패널 ── -->
+    <div class="lg:col-span-2">
+      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 space-y-6">
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">재무 현황</h2>
+
+        <!-- 월 수입 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="income" class="text-sm text-zinc-300">월 수입</label>
+            <div class="flex items-center gap-1">
+              <input id="income" type="number" value="4000000" min="0" max="50000000" step="100000"
+                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">원</span>
+            </div>
+          </div>
+          <input id="income-slider" type="range" min="0" max="20000000" step="100000" value="4000000" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">0</span>
+            <span class="font-mono text-[10px] text-zinc-700">2,000만</span>
+          </div>
+        </div>
+
+        <!-- 월 생활비 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="expense" class="text-sm text-zinc-300">월 생활비</label>
+            <div class="flex items-center gap-1">
+              <input id="expense" type="number" value="2500000" min="0" max="20000000" step="100000"
+                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">원</span>
+            </div>
+          </div>
+          <input id="expense-slider" type="range" min="0" max="10000000" step="100000" value="2500000" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">0</span>
+            <span class="font-mono text-[10px] text-zinc-700">1,000만</span>
+          </div>
+          <p class="mt-1.5 text-[11px] text-zinc-700">FIRE 후 예상 생활비 기준으로 입력하세요</p>
+        </div>
+
+        <!-- 현재 보유 자산 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="assets" class="text-sm text-zinc-300">현재 보유 자산</label>
+            <div class="flex items-center gap-1">
+              <input id="assets" type="number" value="50000000" min="0" max="2000000000" step="1000000"
+                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">원</span>
+            </div>
+          </div>
+          <input id="assets-slider" type="range" min="0" max="500000000" step="1000000" value="50000000" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">0</span>
+            <span class="font-mono text-[10px] text-zinc-700">5억</span>
+          </div>
+        </div>
+
+        <!-- 기대 연 수익률 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="rate" class="text-sm text-zinc-300">기대 연 수익률</label>
+            <div class="flex items-center gap-1">
+              <input id="rate" type="number" value="6" min="0" max="20" step="0.5"
+                class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">%</span>
+            </div>
+          </div>
+          <input id="rate-slider" type="range" min="0" max="20" step="0.5" value="6" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">0%</span>
+            <span class="font-mono text-[10px] text-zinc-700">20%</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 결과 패널 ── -->
+    <div class="lg:col-span-3 flex flex-col gap-5">
+
+      <!-- 결과 카드 -->
+      <div class="grid grid-cols-2 gap-3">
+
+        <div class="col-span-2 sm:col-span-1 rounded-xl border border-brand/20 bg-brand/5 p-4">
+          <p class="text-xs text-zinc-500 mb-1.5">FIRE 달성까지</p>
+          <p id="result-years" class="font-mono text-2xl font-bold text-brand leading-none">—</p>
+          <p id="result-date" class="font-mono text-xs text-zinc-600 mt-1">—</p>
+        </div>
+
+        <div class="col-span-2 sm:col-span-1 rounded-xl border border-white/8 bg-[#111111] p-4">
+          <p class="text-xs text-zinc-500 mb-1.5">FIRE 목표금액</p>
+          <p id="result-target" class="font-mono text-2xl font-bold text-white leading-none">—</p>
+          <p class="font-mono text-xs text-zinc-600 mt-1">연 생활비 × 25</p>
+        </div>
+
+        <div class="rounded-xl border border-white/8 bg-[#111111] p-4">
+          <p class="text-xs text-zinc-500 mb-1.5">현재 저축률</p>
+          <p id="result-saverate" class="font-mono text-lg font-semibold text-zinc-300 leading-none">—</p>
+          <p id="result-monthly-save" class="font-mono text-xs text-zinc-600 mt-1">—</p>
+        </div>
+
+        <div class="rounded-xl border border-white/8 bg-[#111111] p-4">
+          <p class="text-xs text-zinc-500 mb-1.5">현재 자산 달성률</p>
+          <p id="result-progress" class="font-mono text-lg font-semibold text-zinc-300 leading-none">—</p>
+          <div class="mt-2 h-1.5 w-full rounded-full bg-white/8 overflow-hidden">
+            <div id="progress-bar" class="h-full rounded-full bg-brand transition-all duration-300" style="width:0%"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 차트 -->
+      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 flex-1">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">자산 성장 vs FIRE 목표</h3>
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5 font-mono text-[10px] text-zinc-600"><span class="inline-block h-2 w-4 rounded-full bg-brand"></span>자산</span>
+            <span class="flex items-center gap-1.5 font-mono text-[10px] text-zinc-600"><span class="inline-block h-px w-4 border-t-2 border-dashed border-zinc-600"></span>목표</span>
+          </div>
+        </div>
+        <div class="relative" style="height: 220px;">
+          <canvas id="fireChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 면책 고지 -->
+  <div class="mt-6 rounded-xl border border-white/5 bg-[#111111]/40 px-5 py-4">
+    <p class="text-xs text-zinc-600 leading-relaxed">
+      ⚠️ 이 계산기는 교육 목적의 시뮬레이션 도구입니다. 실제 투자 결과는 세금, 수수료, 인플레이션, 시장 변동성 등에 따라 크게 달라질 수 있습니다. 투자 자문이 아니며, 모든 결정은 본인의 판단과 책임 하에 진행하시기 바랍니다.
+    </p>
+  </div>
+
+</div>
+
+<style>
+  .calc-slider { -webkit-appearance:none; appearance:none; height:4px; border-radius:9999px; background:rgba(255,255,255,0.08); outline:none; }
+  .calc-slider::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:#3ECF8E; cursor:pointer; box-shadow:0 0 0 3px rgba(62,207,142,0.2); transition:box-shadow .15s; }
+  .calc-slider::-webkit-slider-thumb:hover { box-shadow:0 0 0 5px rgba(62,207,142,0.25); }
+  .calc-slider::-moz-range-thumb { width:16px; height:16px; border-radius:50%; background:#3ECF8E; cursor:pointer; border:none; box-shadow:0 0 0 3px rgba(62,207,142,0.2); }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function fmtWon(n) {
+    if (n >= 1e8) return (n / 1e8).toFixed(1).replace(/\.0$/, '') + '억원';
+    if (n >= 1e4) return Math.round(n / 1e4) + '만원';
+    return Math.round(n).toLocaleString('ko-KR') + '원';
+  }
+  function fmtShort(n) {
+    if (n >= 1e8) return (n / 1e8).toFixed(0) + '억';
+    if (n >= 1e4) return (n / 1e4).toFixed(0) + '만';
+    return Math.round(n);
+  }
+
+  Chart.defaults.color = '#52525b';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+  const ctx = document.getElementById('fireChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: '자산 성장',
+          data: [],
+          borderColor: '#3ECF8E',
+          backgroundColor: 'rgba(62,207,142,0.06)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        },
+        {
+          label: 'FIRE 목표',
+          data: [],
+          borderColor: 'rgba(255,255,255,0.25)',
+          borderWidth: 1.5,
+          borderDash: [6, 4],
+          fill: false,
+          tension: 0,
+          pointRadius: 0,
+          pointHoverRadius: 0,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1c1c1c',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 10,
+          titleFont: { size: 11, family: "'JetBrains Mono'" },
+          bodyFont: { size: 12, family: "'JetBrains Mono'" },
+          callbacks: {
+            label: c => ' ' + c.dataset.label + ': ' + fmtWon(c.raw),
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10, family: "'JetBrains Mono'" }, maxTicksLimit: 11, color: '#52525b' },
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { font: { size: 10, family: "'JetBrains Mono'" }, color: '#52525b', callback: fmtShort },
+        },
+      },
+    },
+  });
+
+  function calcYearsToFire(P, pmt, annualRate, target) {
+    if (P >= target) return 0;
+    const mr = annualRate / 100 / 12;
+    for (let m = 1; m <= 600; m++) {
+      const v = mr === 0
+        ? P + pmt * m
+        : P * Math.pow(1 + mr, m) + pmt * (Math.pow(1 + mr, m) - 1) / mr;
+      if (v >= target) return m / 12;
+    }
+    return Infinity;
+  }
+
+  function assetAtYear(P, pmt, annualRate, y) {
+    const mr = annualRate / 100 / 12;
+    const m = y * 12;
+    return mr === 0 ? P + pmt * m : P * Math.pow(1 + mr, m) + pmt * (Math.pow(1 + mr, m) - 1) / mr;
+  }
+
+  function calculate() {
+    const income  = Math.max(0, parseFloat(document.getElementById('income').value)  || 0);
+    const expense = Math.max(0, parseFloat(document.getElementById('expense').value) || 0);
+    const assets  = Math.max(0, parseFloat(document.getElementById('assets').value)  || 0);
+    const rate    = Math.max(0, parseFloat(document.getElementById('rate').value)    || 0);
+
+    const monthlySave = income - expense;
+    const annualExpense = expense * 12;
+    const fireTarget = annualExpense * 25;
+
+    // 저축률
+    const saveRate = income > 0 ? ((monthlySave / income) * 100).toFixed(1) : 0;
+
+    // FIRE 달성 기간
+    const yearsRaw = calcYearsToFire(assets, Math.max(0, monthlySave), rate, fireTarget);
+    const fireAchieved = assets >= fireTarget;
+
+    // 결과 표시
+    document.getElementById('result-target').textContent = fmtWon(fireTarget);
+    document.getElementById('result-saverate').textContent = saveRate + '%';
+    document.getElementById('result-monthly-save').textContent = '월 저축 ' + fmtWon(Math.max(0, monthlySave));
+
+    const progressPct = fireTarget > 0 ? Math.min(100, (assets / fireTarget) * 100) : 0;
+    document.getElementById('result-progress').textContent = progressPct.toFixed(1) + '%';
+    document.getElementById('progress-bar').style.width = progressPct + '%';
+
+    if (fireAchieved) {
+      document.getElementById('result-years').textContent = '이미 달성!';
+      document.getElementById('result-date').textContent = '축하합니다 🎉';
+    } else if (!isFinite(yearsRaw)) {
+      document.getElementById('result-years').textContent = '50년 초과';
+      document.getElementById('result-date').textContent = '저축액을 늘려보세요';
+    } else {
+      const yrs = Math.floor(yearsRaw);
+      const mos = Math.round((yearsRaw - yrs) * 12);
+      document.getElementById('result-years').textContent = yrs + '년 ' + (mos > 0 ? mos + '개월' : '');
+      const now = new Date();
+      now.setFullYear(now.getFullYear() + yrs);
+      now.setMonth(now.getMonth() + mos);
+      document.getElementById('result-date').textContent = now.getFullYear() + '년 달성 예상';
+    }
+
+    // 차트 데이터
+    const displayYears = isFinite(yearsRaw) ? Math.min(50, Math.ceil(yearsRaw) + 5) : 50;
+    const labels = [], assetData = [], targetData = [];
+    for (let y = 0; y <= displayYears; y++) {
+      labels.push(y + '년');
+      assetData.push(Math.round(assetAtYear(assets, Math.max(0, monthlySave), rate, y)));
+      targetData.push(Math.round(fireTarget));
+    }
+
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = assetData;
+    chart.data.datasets[1].data = targetData;
+    chart.update('none');
+  }
+
+  function sync(inputId, sliderId) {
+    const inp = document.getElementById(inputId);
+    const sld = document.getElementById(sliderId);
+    inp.addEventListener('input', () => { sld.value = inp.value; calculate(); });
+    sld.addEventListener('input', () => { inp.value = sld.value; calculate(); });
+  }
+
+  sync('income',  'income-slider');
+  sync('expense', 'expense-slider');
+  sync('assets',  'assets-slider');
+  sync('rate',    'rate-slider');
+
+  calculate();
+})();
+</script>

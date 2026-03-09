@@ -1,0 +1,343 @@
+---
+layout: default
+title: "배당 재투자 계산기"
+description: "배당금 재투자 여부에 따른 장기 수익 차이를 시뮬레이션하는 무료 계산기. 복리 효과를 시각적으로 확인하세요."
+permalink: /tools/dividend-reinvestment/
+---
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 pt-10 pb-20">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center gap-1.5 mb-4">
+      <a href="{{ '/' | relative_url }}" class="text-xs text-zinc-600 hover:text-zinc-400 transition">홈</a>
+      <span class="text-zinc-700 text-xs">/</span>
+      <a href="{{ '/tools/' | relative_url }}" class="text-xs text-zinc-600 hover:text-zinc-400 transition">툴</a>
+      <span class="text-zinc-700 text-xs">/</span>
+      <span class="text-xs text-brand">배당 재투자 계산기</span>
+    </div>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand/15 flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3ECF8E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">배당 재투자 계산기</h1>
+    </div>
+    <p class="text-sm text-zinc-500 ml-12">배당금을 재투자할 때와 현금으로 수령할 때의 장기 수익 차이를 비교합니다.</p>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid gap-5 lg:grid-cols-5">
+
+    <!-- ── 입력 패널 ── -->
+    <div class="lg:col-span-2">
+      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 space-y-6">
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">투자 조건</h2>
+
+        <!-- 초기 투자금 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="principal" class="text-sm text-zinc-300">초기 투자금</label>
+            <div class="flex items-center gap-1">
+              <input id="principal" type="number" value="10000000" min="0" max="1000000000" step="1000000"
+                class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">원</span>
+            </div>
+          </div>
+          <input id="principal-slider" type="range" min="0" max="100000000" step="1000000" value="10000000" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">0</span>
+            <span class="font-mono text-[10px] text-zinc-700">1억</span>
+          </div>
+        </div>
+
+        <!-- 연 배당률 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="divrate" class="text-sm text-zinc-300">연 배당률</label>
+            <div class="flex items-center gap-1">
+              <input id="divrate" type="number" value="3" min="0" max="15" step="0.1"
+                class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">%</span>
+            </div>
+          </div>
+          <input id="divrate-slider" type="range" min="0" max="15" step="0.1" value="3" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">0%</span>
+            <span class="font-mono text-[10px] text-zinc-700">15%</span>
+          </div>
+        </div>
+
+        <!-- 연 주가 상승률 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="growth" class="text-sm text-zinc-300">연 주가 상승률</label>
+            <div class="flex items-center gap-1">
+              <input id="growth" type="number" value="5" min="0" max="20" step="0.5"
+                class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">%</span>
+            </div>
+          </div>
+          <input id="growth-slider" type="range" min="0" max="20" step="0.5" value="5" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">0%</span>
+            <span class="font-mono text-[10px] text-zinc-700">20%</span>
+          </div>
+        </div>
+
+        <!-- 투자 기간 -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label for="years" class="text-sm text-zinc-300">투자 기간</label>
+            <div class="flex items-center gap-1">
+              <input id="years" type="number" value="20" min="1" max="50" step="1"
+                class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+              <span class="text-xs text-zinc-600">년</span>
+            </div>
+          </div>
+          <input id="years-slider" type="range" min="1" max="50" step="1" value="20" class="calc-slider w-full cursor-pointer" />
+          <div class="flex justify-between mt-1">
+            <span class="font-mono text-[10px] text-zinc-700">1년</span>
+            <span class="font-mono text-[10px] text-zinc-700">50년</span>
+          </div>
+        </div>
+
+        <!-- 총 연수익률 표시 -->
+        <div class="rounded-lg bg-white/4 px-4 py-3 space-y-1.5">
+          <div class="flex justify-between">
+            <span class="text-xs text-zinc-600">재투자 연수익률</span>
+            <span id="total-rate-reinvest" class="font-mono text-xs text-brand">—</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-xs text-zinc-600">미재투자 연수익률</span>
+            <span id="total-rate-no" class="font-mono text-xs text-zinc-400">—</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 결과 패널 ── -->
+    <div class="lg:col-span-3 flex flex-col gap-5">
+
+      <!-- 비교 카드 -->
+      <div class="grid grid-cols-2 gap-3">
+
+        <!-- 재투자 O -->
+        <div class="rounded-xl border border-brand/20 bg-brand/5 p-4">
+          <div class="flex items-center gap-1.5 mb-3">
+            <span class="h-2 w-2 rounded-full bg-brand"></span>
+            <p class="text-xs font-semibold text-brand">배당 재투자</p>
+          </div>
+          <p class="text-xs text-zinc-500 mb-1">최종 자산</p>
+          <p id="result-reinvest-total" class="font-mono text-xl font-bold text-white leading-none">—</p>
+          <p id="result-reinvest-roi" class="font-mono text-xs text-zinc-500 mt-1.5">—</p>
+        </div>
+
+        <!-- 재투자 X -->
+        <div class="rounded-xl border border-white/8 bg-[#111111] p-4">
+          <div class="flex items-center gap-1.5 mb-3">
+            <span class="h-2 w-2 rounded-full bg-zinc-500"></span>
+            <p class="text-xs font-semibold text-zinc-400">배당 수령</p>
+          </div>
+          <p class="text-xs text-zinc-500 mb-1">최종 자산 + 배당금</p>
+          <p id="result-no-total" class="font-mono text-xl font-bold text-white leading-none">—</p>
+          <p id="result-no-roi" class="font-mono text-xs text-zinc-500 mt-1.5">—</p>
+        </div>
+
+        <!-- 차이 -->
+        <div class="col-span-2 rounded-xl border border-white/8 bg-[#111111] p-4 flex items-center justify-between">
+          <span class="text-sm text-zinc-400">재투자로 인한 추가 자산</span>
+          <div class="text-right">
+            <p id="result-diff" class="font-mono text-lg font-bold text-brand">—</p>
+            <p id="result-diff-pct" class="font-mono text-xs text-zinc-600">—</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 차트 -->
+      <div class="rounded-xl border border-white/8 bg-[#111111] p-5 flex-1">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-semibold uppercase tracking-widest text-zinc-600">자산 성장 비교</h3>
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5 font-mono text-[10px] text-zinc-600"><span class="inline-block h-2 w-4 rounded-full bg-brand"></span>재투자</span>
+            <span class="flex items-center gap-1.5 font-mono text-[10px] text-zinc-600"><span class="inline-block h-2 w-4 rounded-full bg-zinc-600"></span>수령</span>
+          </div>
+        </div>
+        <div class="relative" style="height: 220px;">
+          <canvas id="divChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 면책 고지 -->
+  <div class="mt-6 rounded-xl border border-white/5 bg-[#111111]/40 px-5 py-4">
+    <p class="text-xs text-zinc-600 leading-relaxed">
+      ⚠️ 이 계산기는 교육 목적의 시뮬레이션 도구입니다. 배당세(15.4%), 매매 수수료, 배당 삭감 리스크 등은 반영되지 않습니다. 실제 결과와 다를 수 있으며, 모든 투자 결정은 본인의 판단과 책임 하에 진행하시기 바랍니다.
+    </p>
+  </div>
+
+</div>
+
+<style>
+  .calc-slider { -webkit-appearance:none; appearance:none; height:4px; border-radius:9999px; background:rgba(255,255,255,0.08); outline:none; }
+  .calc-slider::-webkit-slider-thumb { -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:#3ECF8E; cursor:pointer; box-shadow:0 0 0 3px rgba(62,207,142,0.2); transition:box-shadow .15s; }
+  .calc-slider::-webkit-slider-thumb:hover { box-shadow:0 0 0 5px rgba(62,207,142,0.25); }
+  .calc-slider::-moz-range-thumb { width:16px; height:16px; border-radius:50%; background:#3ECF8E; cursor:pointer; border:none; box-shadow:0 0 0 3px rgba(62,207,142,0.2); }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function fmtWon(n) {
+    if (n >= 1e8) return (n / 1e8).toFixed(1).replace(/\.0$/, '') + '억원';
+    if (n >= 1e4) return Math.round(n / 1e4) + '만원';
+    return Math.round(n).toLocaleString('ko-KR') + '원';
+  }
+  function fmtShort(n) {
+    if (n >= 1e8) return (n / 1e8).toFixed(0) + '억';
+    if (n >= 1e4) return (n / 1e4).toFixed(0) + '만';
+    return Math.round(n);
+  }
+
+  Chart.defaults.color = '#52525b';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+  const ctx = document.getElementById('divChart').getContext('2d');
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: '배당 재투자',
+          data: [],
+          borderColor: '#3ECF8E',
+          backgroundColor: 'rgba(62,207,142,0.06)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+        },
+        {
+          label: '배당 수령',
+          data: [],
+          borderColor: 'rgba(161,161,170,0.5)',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          fill: false,
+          tension: 0.3,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          borderDash: [4, 3],
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1c1c1c',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          padding: 10,
+          titleFont: { size: 11, family: "'JetBrains Mono'" },
+          bodyFont: { size: 12, family: "'JetBrains Mono'" },
+          callbacks: {
+            label: c => ' ' + c.dataset.label + ': ' + fmtWon(c.raw),
+          },
+        },
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { font: { size: 10, family: "'JetBrains Mono'" }, maxTicksLimit: 11, color: '#52525b' },
+        },
+        y: {
+          grid: { color: 'rgba(255,255,255,0.04)' },
+          ticks: { font: { size: 10, family: "'JetBrains Mono'" }, color: '#52525b', callback: fmtShort },
+        },
+      },
+    },
+  });
+
+  function calculate() {
+    const P  = Math.max(0, parseFloat(document.getElementById('principal').value) || 0);
+    const d  = Math.max(0, parseFloat(document.getElementById('divrate').value)   || 0) / 100;
+    const g  = Math.max(0, parseFloat(document.getElementById('growth').value)    || 0) / 100;
+    const n  = Math.min(50, Math.max(1, parseInt(document.getElementById('years').value) || 1));
+
+    // 총 연수익률 표시
+    document.getElementById('total-rate-reinvest').textContent = ((g + d) * 100).toFixed(1) + '%';
+    document.getElementById('total-rate-no').textContent       = (g * 100).toFixed(1) + '% + 배당';
+
+    const labels = ['0년'];
+    const dataReinvest = [P];
+    const dataNo       = [P];
+
+    for (let y = 1; y <= n; y++) {
+      // 시나리오 A: 재투자 — 총수익률(g+d)로 복리
+      const vA = P * Math.pow(1 + g + d, y);
+
+      // 시나리오 B: 수령 — 주가상승(g)만 복리, 배당은 연말 주식 가치의 d%씩 현금 누적
+      const stockB = P * Math.pow(1 + g, y);
+      let cashB = 0;
+      if (g === 0) {
+        cashB = P * d * y;
+      } else {
+        // 매년 말 받는 배당: P*(1+g)^1*d, P*(1+g)^2*d, ..., P*(1+g)^y*d
+        cashB = P * d * (1 + g) * (Math.pow(1 + g, y) - 1) / g;
+      }
+      const vB = stockB + cashB;
+
+      labels.push(y + '년');
+      dataReinvest.push(Math.round(vA));
+      dataNo.push(Math.round(vB));
+    }
+
+    const finalA = dataReinvest[n];
+    const finalB = dataNo[n];
+    const diff   = finalA - finalB;
+    const diffPct = finalB > 0 ? ((diff / finalB) * 100).toFixed(1) : 0;
+    const roiA   = P > 0 ? (((finalA / P) - 1) * 100).toFixed(1) : 0;
+    const roiB   = P > 0 ? (((finalB / P) - 1) * 100).toFixed(1) : 0;
+
+    document.getElementById('result-reinvest-total').textContent = fmtWon(finalA);
+    document.getElementById('result-reinvest-roi').textContent   = '수익률 +' + roiA + '%';
+    document.getElementById('result-no-total').textContent       = fmtWon(finalB);
+    document.getElementById('result-no-roi').textContent         = '수익률 +' + roiB + '%';
+    document.getElementById('result-diff').textContent           = '+' + fmtWon(diff);
+    document.getElementById('result-diff-pct').textContent       = '수령 대비 +' + diffPct + '% 더 많음';
+
+    chart.data.labels            = labels;
+    chart.data.datasets[0].data  = dataReinvest;
+    chart.data.datasets[1].data  = dataNo;
+    chart.update('none');
+  }
+
+  function sync(inputId, sliderId) {
+    const inp = document.getElementById(inputId);
+    const sld = document.getElementById(sliderId);
+    inp.addEventListener('input', () => { sld.value = inp.value; calculate(); });
+    sld.addEventListener('input', () => { inp.value = sld.value; calculate(); });
+  }
+
+  sync('principal', 'principal-slider');
+  sync('divrate',   'divrate-slider');
+  sync('growth',    'growth-slider');
+  sync('years',     'years-slider');
+
+  calculate();
+})();
+</script>

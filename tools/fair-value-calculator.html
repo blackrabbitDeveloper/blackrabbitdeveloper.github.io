@@ -1,0 +1,335 @@
+---
+layout: default
+title: "적정주가 계산기"
+description: "EPS·BPS·PER·PBR로 주식의 적정주가를 3가지 방식으로 계산하고 현재가 대비 괴리율을 확인하는 무료 도구"
+permalink: /tools/fair-value-calculator/
+---
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 pt-10 pb-20">
+
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center gap-1.5 mb-4">
+      <a href="{{ '/' | relative_url }}" class="text-xs text-zinc-600 hover:text-zinc-400 transition">홈</a>
+      <span class="text-zinc-700 text-xs">/</span>
+      <a href="{{ '/tools/' | relative_url }}" class="text-xs text-zinc-600 hover:text-zinc-400 transition">툴</a>
+      <span class="text-zinc-700 text-xs">/</span>
+      <span class="text-xs text-brand">적정주가 계산기</span>
+    </div>
+    <div class="flex items-center gap-3 mb-2">
+      <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-brand/15 flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3ECF8E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-white sm:text-3xl">적정주가 계산기</h1>
+    </div>
+    <p class="text-sm text-zinc-500 ml-12">PER·PBR·그레이엄 넘버 3가지 방식으로 주식의 적정가를 산출합니다.</p>
+  </div>
+
+  <!-- Input Grid -->
+  <div class="rounded-xl border border-white/8 bg-[#111111] p-5 mb-5">
+    <h2 class="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-5">기업 지표 입력</h2>
+    <div class="grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+
+      <!-- 현재 주가 -->
+      <div>
+        <label for="price" class="block text-sm text-zinc-300 mb-1.5">현재 주가</label>
+        <div class="flex items-center gap-2">
+          <input id="price" type="number" value="85000" min="0" step="100"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+          <span class="text-xs text-zinc-600 whitespace-nowrap">원</span>
+        </div>
+      </div>
+
+      <!-- EPS -->
+      <div>
+        <label for="eps" class="block text-sm text-zinc-300 mb-1.5">
+          EPS
+          <span class="ml-1 text-[11px] text-zinc-600">(주당순이익)</span>
+        </label>
+        <div class="flex items-center gap-2">
+          <input id="eps" type="number" value="6000" step="100"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+          <span class="text-xs text-zinc-600 whitespace-nowrap">원</span>
+        </div>
+      </div>
+
+      <!-- BPS -->
+      <div>
+        <label for="bps" class="block text-sm text-zinc-300 mb-1.5">
+          BPS
+          <span class="ml-1 text-[11px] text-zinc-600">(주당순자산)</span>
+        </label>
+        <div class="flex items-center gap-2">
+          <input id="bps" type="number" value="55000" step="100"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+          <span class="text-xs text-zinc-600 whitespace-nowrap">원</span>
+        </div>
+      </div>
+
+      <!-- 목표 PER -->
+      <div>
+        <label for="target-per" class="block text-sm text-zinc-300 mb-1.5">
+          목표 PER
+          <span class="ml-1 text-[11px] text-zinc-600">(섹터 평균 참고)</span>
+        </label>
+        <div class="flex items-center gap-2">
+          <input id="target-per" type="number" value="15" min="1" max="100" step="0.5"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+          <span class="text-xs text-zinc-600 whitespace-nowrap">배</span>
+        </div>
+      </div>
+
+      <!-- 목표 PBR -->
+      <div>
+        <label for="target-pbr" class="block text-sm text-zinc-300 mb-1.5">
+          목표 PBR
+          <span class="ml-1 text-[11px] text-zinc-600">(섹터 평균 참고)</span>
+        </label>
+        <div class="flex items-center gap-2">
+          <input id="target-pbr" type="number" value="1.5" min="0.1" max="20" step="0.1"
+            class="flex-1 rounded-md bg-white/5 border border-white/8 px-3 py-2 font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
+          <span class="text-xs text-zinc-600 whitespace-nowrap">배</span>
+        </div>
+      </div>
+
+      <!-- 현재 PER / PBR 표시 -->
+      <div class="flex flex-col justify-end gap-2">
+        <div class="flex items-center justify-between rounded-lg bg-white/4 px-3 py-2">
+          <span class="text-xs text-zinc-500">현재 PER</span>
+          <span id="current-per" class="font-mono text-sm text-white">—</span>
+        </div>
+        <div class="flex items-center justify-between rounded-lg bg-white/4 px-3 py-2">
+          <span class="text-xs text-zinc-500">현재 PBR</span>
+          <span id="current-pbr" class="font-mono text-sm text-white">—</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Result Cards -->
+  <div class="grid gap-4 sm:grid-cols-3">
+
+    <!-- PER 방식 -->
+    <div class="rounded-xl border border-white/8 bg-[#111111] p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-semibold text-white">PER 방식</h3>
+        <span class="font-mono text-[10px] text-zinc-600">EPS × 목표PER</span>
+      </div>
+      <p class="text-xs text-zinc-600 mb-1">적정주가</p>
+      <p id="per-fair" class="font-mono text-2xl font-bold text-white mb-3">—</p>
+      <div id="per-bar-wrap" class="mb-3 hidden">
+        <div class="h-1.5 w-full rounded-full bg-white/8 overflow-hidden">
+          <div id="per-bar" class="h-full rounded-full transition-all duration-300" style="width:50%"></div>
+        </div>
+        <div class="flex justify-between mt-1">
+          <span class="font-mono text-[9px] text-zinc-700">저평가</span>
+          <span class="font-mono text-[9px] text-zinc-700">고평가</span>
+        </div>
+      </div>
+      <div id="per-badge" class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs hidden">
+        <span id="per-dot" class="h-1.5 w-1.5 rounded-full"></span>
+        <span id="per-label">—</span>
+      </div>
+      <p id="per-gap" class="mt-2 font-mono text-sm text-zinc-400">—</p>
+    </div>
+
+    <!-- PBR 방식 -->
+    <div class="rounded-xl border border-white/8 bg-[#111111] p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-semibold text-white">PBR 방식</h3>
+        <span class="font-mono text-[10px] text-zinc-600">BPS × 목표PBR</span>
+      </div>
+      <p class="text-xs text-zinc-600 mb-1">적정주가</p>
+      <p id="pbr-fair" class="font-mono text-2xl font-bold text-white mb-3">—</p>
+      <div id="pbr-bar-wrap" class="mb-3 hidden">
+        <div class="h-1.5 w-full rounded-full bg-white/8 overflow-hidden">
+          <div id="pbr-bar" class="h-full rounded-full transition-all duration-300" style="width:50%"></div>
+        </div>
+        <div class="flex justify-between mt-1">
+          <span class="font-mono text-[9px] text-zinc-700">저평가</span>
+          <span class="font-mono text-[9px] text-zinc-700">고평가</span>
+        </div>
+      </div>
+      <div id="pbr-badge" class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs hidden">
+        <span id="pbr-dot" class="h-1.5 w-1.5 rounded-full"></span>
+        <span id="pbr-label">—</span>
+      </div>
+      <p id="pbr-gap" class="mt-2 font-mono text-sm text-zinc-400">—</p>
+    </div>
+
+    <!-- 그레이엄 넘버 -->
+    <div class="rounded-xl border border-white/8 bg-[#111111] p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-semibold text-white">그레이엄 넘버</h3>
+        <span class="font-mono text-[10px] text-zinc-600">√(22.5×EPS×BPS)</span>
+      </div>
+      <p class="text-xs text-zinc-600 mb-1">적정주가</p>
+      <p id="graham-fair" class="font-mono text-2xl font-bold text-white mb-3">—</p>
+      <div id="graham-bar-wrap" class="mb-3 hidden">
+        <div class="h-1.5 w-full rounded-full bg-white/8 overflow-hidden">
+          <div id="graham-bar" class="h-full rounded-full transition-all duration-300" style="width:50%"></div>
+        </div>
+        <div class="flex justify-between mt-1">
+          <span class="font-mono text-[9px] text-zinc-700">저평가</span>
+          <span class="font-mono text-[9px] text-zinc-700">고평가</span>
+        </div>
+      </div>
+      <div id="graham-badge" class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs hidden">
+        <span id="graham-dot" class="h-1.5 w-1.5 rounded-full"></span>
+        <span id="graham-label">—</span>
+      </div>
+      <p id="graham-gap" class="mt-2 font-mono text-sm text-zinc-400">—</p>
+    </div>
+
+  </div>
+
+  <!-- 종합 판단 -->
+  <div id="consensus-wrap" class="mt-4 rounded-xl border border-white/8 bg-[#111111] px-5 py-4 hidden">
+    <div class="flex items-center justify-between">
+      <span class="text-sm text-zinc-400">3가지 방식 평균 적정가</span>
+      <div class="flex items-center gap-3">
+        <span id="consensus-price" class="font-mono text-lg font-bold text-white">—</span>
+        <span id="consensus-badge" class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 가이드 -->
+  <div class="mt-4 rounded-xl border border-white/5 bg-[#111111]/40 px-5 py-4 space-y-2">
+    <p class="text-xs font-semibold text-zinc-500">지표 찾는 방법</p>
+    <p class="text-xs text-zinc-600 leading-relaxed">
+      <strong class="text-zinc-500">EPS·BPS</strong>는 네이버 금융 → 종목 검색 → 투자정보 → 재무제표에서 확인할 수 있습니다.
+      <strong class="text-zinc-500">목표 PER/PBR</strong>은 동일 섹터 업종 평균이나 해당 기업의 과거 평균을 참고하세요.
+    </p>
+    <p class="text-xs text-zinc-600 leading-relaxed">
+      ⚠️ 이 계산기는 단순 참고용 시뮬레이션 도구입니다. 주식 투자 추천이 아니며, 실제 투자 결정은 다양한 요인을 종합적으로 검토한 후 본인의 책임 하에 진행하시기 바랍니다.
+    </p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  function fmtPrice(n) {
+    if (n >= 1e4) return Math.round(n).toLocaleString('ko-KR') + '원';
+    return Math.round(n) + '원';
+  }
+
+  function setMethod(prefix, fairValue, currentPrice) {
+    const fairEl   = document.getElementById(prefix + '-fair');
+    const barEl    = document.getElementById(prefix + '-bar');
+    const barWrap  = document.getElementById(prefix + '-bar-wrap');
+    const badgeEl  = document.getElementById(prefix + '-badge');
+    const dotEl    = document.getElementById(prefix + '-dot');
+    const labelEl  = document.getElementById(prefix + '-label');
+    const gapEl    = document.getElementById(prefix + '-gap');
+
+    if (fairValue <= 0 || isNaN(fairValue)) {
+      fairEl.textContent = '계산 불가';
+      fairEl.className = 'font-mono text-2xl font-bold text-zinc-600 mb-3';
+      barWrap.classList.add('hidden');
+      badgeEl.classList.add('hidden');
+      gapEl.textContent = 'EPS 또는 BPS 값을 확인해주세요';
+      return null;
+    }
+
+    fairEl.textContent = fmtPrice(fairValue);
+    fairEl.className = 'font-mono text-2xl font-bold text-white mb-3';
+    barWrap.classList.remove('hidden');
+    badgeEl.classList.remove('hidden');
+
+    const ratio = currentPrice / fairValue; // 1 = 적정, <1 저평가, >1 고평가
+    const gapPct = ((ratio - 1) * 100).toFixed(1);
+    const barPct = Math.max(5, Math.min(95, (ratio / 2) * 100)); // 0.5배=25%, 1배=50%, 2배=100%
+
+    barEl.style.width = barPct + '%';
+
+    let color, label;
+    if (ratio < 0.8) {
+      color = '#3ECF8E'; label = '저평가';
+      badgeEl.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs bg-brand/10 border border-brand/30';
+      dotEl.className = 'h-1.5 w-1.5 rounded-full bg-brand';
+      labelEl.className = 'text-brand';
+      barEl.className = 'h-full rounded-full bg-brand transition-all duration-300';
+    } else if (ratio <= 1.2) {
+      color = '#f6c90e'; label = '적정';
+      badgeEl.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs bg-yellow-500/10 border border-yellow-500/30';
+      dotEl.className = 'h-1.5 w-1.5 rounded-full bg-yellow-400';
+      labelEl.className = 'text-yellow-400';
+      barEl.className = 'h-full rounded-full bg-yellow-400 transition-all duration-300';
+    } else {
+      color = '#f56565'; label = '고평가';
+      badgeEl.className = 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-xs bg-red-500/10 border border-red-500/30';
+      dotEl.className = 'h-1.5 w-1.5 rounded-full bg-red-400';
+      labelEl.className = 'text-red-400';
+      barEl.className = 'h-full rounded-full bg-red-400 transition-all duration-300';
+    }
+    labelEl.textContent = label;
+
+    const sign = gapPct > 0 ? '+' : '';
+    gapEl.textContent = '현재가 대비 ' + sign + gapPct + '%';
+    gapEl.className = 'mt-2 font-mono text-sm ' + (ratio < 0.8 ? 'text-brand' : ratio <= 1.2 ? 'text-yellow-400' : 'text-red-400');
+
+    return fairValue;
+  }
+
+  function calculate() {
+    const price    = parseFloat(document.getElementById('price').value)      || 0;
+    const eps      = parseFloat(document.getElementById('eps').value)        || 0;
+    const bps      = parseFloat(document.getElementById('bps').value)        || 0;
+    const targetPer = parseFloat(document.getElementById('target-per').value) || 15;
+    const targetPbr = parseFloat(document.getElementById('target-pbr').value) || 1.5;
+
+    // 현재 PER / PBR
+    document.getElementById('current-per').textContent = (price > 0 && eps > 0) ? (price / eps).toFixed(1) + '배' : '—';
+    document.getElementById('current-pbr').textContent = (price > 0 && bps > 0) ? (price / bps).toFixed(2) + '배' : '—';
+
+    // 3가지 적정가
+    const perFair    = eps > 0 ? eps * targetPer : -1;
+    const pbrFair    = bps > 0 ? bps * targetPbr : -1;
+    const grahamFair = (eps > 0 && bps > 0) ? Math.sqrt(22.5 * eps * bps) : -1;
+
+    const v1 = setMethod('per',    perFair,    price);
+    const v2 = setMethod('pbr',    pbrFair,    price);
+    const v3 = setMethod('graham', grahamFair, price);
+
+    // 종합 평균
+    const validValues = [v1, v2, v3].filter(v => v !== null && v > 0);
+    const consensusWrap = document.getElementById('consensus-wrap');
+    if (validValues.length > 0 && price > 0) {
+      const avg = validValues.reduce((s, v) => s + v, 0) / validValues.length;
+      const ratio = price / avg;
+      const gapPct = ((ratio - 1) * 100).toFixed(1);
+      const sign = gapPct > 0 ? '+' : '';
+
+      document.getElementById('consensus-price').textContent = fmtPrice(avg) + ' (현재가 대비 ' + sign + gapPct + '%)';
+
+      const cb = document.getElementById('consensus-badge');
+      if (ratio < 0.8) {
+        cb.textContent = '저평가';
+        cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-brand/10 border border-brand/30 text-brand';
+      } else if (ratio <= 1.2) {
+        cb.textContent = '적정';
+        cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-yellow-500/10 border border-yellow-500/30 text-yellow-400';
+      } else {
+        cb.textContent = '고평가';
+        cb.className = 'inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-xs bg-red-500/10 border border-red-500/30 text-red-400';
+      }
+      consensusWrap.classList.remove('hidden');
+    } else {
+      consensusWrap.classList.add('hidden');
+    }
+  }
+
+  ['price', 'eps', 'bps', 'target-per', 'target-pbr'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calculate);
+  });
+
+  calculate();
+})();
+</script>

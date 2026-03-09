@@ -43,11 +43,11 @@ permalink: /tools/compound-calculator/
               <span class="text-xs text-zinc-600">원</span>
             </div>
           </div>
-          <input id="initial-slider" type="range" min="0" max="100000000" step="1000000" value="10000000"
+          <input id="initial-slider" type="range" min="0" max="1000000000" step="1000000" value="10000000"
             class="calc-slider w-full cursor-pointer" />
           <div class="flex justify-between mt-1">
             <span class="font-mono text-[10px] text-zinc-700">0</span>
-            <span class="font-mono text-[10px] text-zinc-700">1억</span>
+            <span class="font-mono text-[10px] text-zinc-700">10억</span>
           </div>
         </div>
 
@@ -56,16 +56,16 @@ permalink: /tools/compound-calculator/
           <div class="flex items-center justify-between mb-2">
             <label for="monthly" class="text-sm text-zinc-300">월 납입금</label>
             <div class="flex items-center gap-1">
-              <input id="monthly" type="number" value="300000" min="0" max="5000000" step="50000"
+              <input id="monthly" type="number" value="300000" min="0" max="10000000" step="50000"
                 class="w-28 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">원</span>
             </div>
           </div>
-          <input id="monthly-slider" type="range" min="0" max="2000000" step="50000" value="300000"
+          <input id="monthly-slider" type="range" min="0" max="10000000" step="50000" value="300000"
             class="calc-slider w-full cursor-pointer" />
           <div class="flex justify-between mt-1">
             <span class="font-mono text-[10px] text-zinc-700">0</span>
-            <span class="font-mono text-[10px] text-zinc-700">200만</span>
+            <span class="font-mono text-[10px] text-zinc-700">1000만</span>
           </div>
         </div>
 
@@ -74,16 +74,16 @@ permalink: /tools/compound-calculator/
           <div class="flex items-center justify-between mb-2">
             <label for="rate" class="text-sm text-zinc-300">연 수익률</label>
             <div class="flex items-center gap-1">
-              <input id="rate" type="number" value="7" min="0" max="30" step="0.5"
+              <input id="rate" type="number" value="7" min="0" max="100" step="0.5"
                 class="w-16 rounded-md bg-white/5 border border-white/8 px-2 py-1 text-right font-mono text-sm text-white focus:border-brand/50 focus:outline-none transition" />
               <span class="text-xs text-zinc-600">%</span>
             </div>
           </div>
-          <input id="rate-slider" type="range" min="0" max="30" step="0.5" value="7"
+          <input id="rate-slider" type="range" min="0" max="100" step="0.5" value="7"
             class="calc-slider w-full cursor-pointer" />
           <div class="flex justify-between mt-1">
             <span class="font-mono text-[10px] text-zinc-700">0%</span>
-            <span class="font-mono text-[10px] text-zinc-700">30%</span>
+            <span class="font-mono text-[10px] text-zinc-700">100%</span>
           </div>
         </div>
 

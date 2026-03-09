@@ -1,0 +1,57 @@
+---
+layout: default
+title: "툴"
+description: "BlackRabbit LAB의 투자·경제 계산 유틸리티 모음 — 복리 계산기 등 무료 온라인 도구"
+permalink: /tools/
+---
+
+<div class="mx-auto max-w-5xl px-4 sm:px-6 pt-10 pb-20">
+
+  <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl mb-2">툴</h1>
+  <p class="font-mono text-xs text-zinc-600 mb-10">투자·경제 관련 무료 계산 도구 모음</p>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+    <!-- 복리 계산기 -->
+    <a
+      href="{{ '/tools/compound-calculator/' | relative_url }}"
+      class="group block rounded-xl border border-white/8 bg-[#111111] p-5 no-underline transition hover:border-brand/40 hover:bg-[#141414]"
+    >
+      <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 transition group-hover:bg-brand/20">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3ECF8E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-white mb-1">복리 계산기</h3>
+      <p class="text-sm text-zinc-500 leading-relaxed">초기 투자금·정기 납입금·수익률·기간으로 장기 복리 성장을 시뮬레이션합니다.</p>
+      <span class="mt-4 inline-flex items-center gap-1 font-mono text-xs text-brand">
+        바로가기
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </span>
+    </a>
+
+    <!-- 추후 추가 슬롯 (흐리게 표시) -->
+    <div class="rounded-xl border border-white/4 bg-[#111111]/40 p-5 opacity-40 cursor-not-allowed">
+      <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-white/5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-zinc-600 mb-1">목표 금액 계산기</h3>
+      <p class="text-sm text-zinc-700 leading-relaxed">목표 금액 달성을 위한 월 납입금·기간을 역산합니다.</p>
+      <span class="mt-4 inline-flex items-center gap-1 font-mono text-xs text-zinc-700">준비 중</span>
+    </div>
+
+    <div class="rounded-xl border border-white/4 bg-[#111111]/40 p-5 opacity-40 cursor-not-allowed">
+      <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-white/5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-zinc-600 mb-1">ETF 수수료 비교기</h3>
+      <p class="text-sm text-zinc-700 leading-relaxed">동일 수익률에서 운용보수 차이가 최종 자산에 미치는 영향을 계산합니다.</p>
+      <span class="mt-4 inline-flex items-center gap-1 font-mono text-xs text-zinc-700">준비 중</span>
+    </div>
+
+  </div>
+</div>

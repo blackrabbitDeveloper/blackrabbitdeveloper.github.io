@@ -17,22 +17,37 @@ import os
 import re
 import shutil
 import subprocess
+import threading
+import time
+import uuid
 import urllib.error
 import urllib.parse
 import urllib.request
 import webbrowser
-from datetime import datetime
+from datetime import datetime, timedelta
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Timer
 
 PORT = 8765
 OLLAMA_BASE = "http://localhost:11434"
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.normpath(os.path.join(SCRIPT_DIR, ".."))
-POSTS_DIR = os.path.normpath(os.path.join(PROJECT_ROOT, "_posts"))
-DRAFTS_DIR = os.path.normpath(os.path.join(PROJECT_ROOT, "_drafts"))
-HISTORY_DIR = os.path.normpath(os.path.join(SCRIPT_DIR, ".history"))
+import sys as _sys
+if getattr(_sys, 'frozen', False):
+    # PyInstaller exe: _tools/dist/post_maker.exe → 두 단계 위가 프로젝트 루트
+    _EXE_DIR     = os.path.dirname(os.path.abspath(_sys.executable))
+    PROJECT_ROOT = os.path.normpath(os.path.join(_EXE_DIR, "../.."))
+    SCRIPT_DIR   = os.path.normpath(os.path.join(PROJECT_ROOT, "_tools"))
+else:
+    SCRIPT_DIR   = os.path.dirname(os.path.abspath(__file__))
+    PROJECT_ROOT = os.path.normpath(os.path.join(SCRIPT_DIR, ".."))
+
+POSTS_DIR    = os.path.normpath(os.path.join(PROJECT_ROOT, "_posts"))
+DRAFTS_DIR   = os.path.normpath(os.path.join(PROJECT_ROOT, "_drafts"))
+HISTORY_DIR  = os.path.normpath(os.path.join(SCRIPT_DIR, ".history"))
+CONFIG_FILE  = os.path.join(SCRIPT_DIR, "schedule_config.json")
+LOG_FILE     = os.path.join(SCRIPT_DIR, "auto_log.json")
+
+CATEGORIES = ["시장분석", "투자 기초", "경제 공부", "ETF·펀드", "재테크", "뉴스 해설", "기업 분석", "기타"]
 
 # ──────────────────────────────────────────────
 # System Prompts
@@ -46,13 +61,16 @@ SYSTEM_PROMPT = """당신은 투자 정보·경제 교육 블로그 'BlackRabbit
 - 독자층: 투자에 관심 있는 일반인, 경제 공부를 시작한 직장인, 재테크 입문자
 
 ## 카테고리별 가이드라인
-- **시장분석**: 1500~2500자, 최근 시장 동향·지수·환율·금리 등을 데이터 기반으로 분석
-- **투자 기초**: 2000~3500자, PER·ROE·배당·분산투자 등 주식 투자 핵심 개념을 쉽게 설명
-- **경제 공부**: 2000~3500자, 거시경제·금리·인플레이션·GDP 등 경제 원리 해설
-- **ETF·펀드**: 1500~2500자, ETF 구조·종류·투자 방법 및 펀드 비교
-- **재테크**: 1500~2500자, 절세·적금·복리·포트폴리오 구성 등 실용적 자산 관리 팁
-- **뉴스 해설**: 1000~2000자, 최신 경제·금융 뉴스를 배경 지식과 함께 해설
-- **기타**: 1000~2000자, 공지·에세이·도서 추천 등
+- **시장분석**: 3000~4000자, 최근 시장 동향·지수·환율·금리 등을 데이터 기반으로 분석
+- **투자 기초**: 3000~4500자, PER·ROE·배당·분산투자 등 주식 투자 핵심 개념을 쉽게 설명
+- **경제 공부**: 3000~4500자, 거시경제·금리·인플레이션·GDP 등 경제 원리 해설
+- **ETF·펀드**: 3000~4000자, ETF 구조·종류·투자 방법 및 펀드 비교
+- **재테크**: 3000~4000자, 절세·적금·복리·포트폴리오 구성 등 실용적 자산 관리 팁
+- **뉴스 해설**: 3000~4000자, 최신 경제·금융 뉴스를 배경 지식과 함께 해설
+- **기업 분석**: 3000~5000자, 특정 기업의 사업 모델·재무지표·경쟁력·리스크를 객관적으로 분석
+- **기타**: 3000~4000자, 공지·에세이·도서 추천 등
+
+> 모든 카테고리 공통: 본문은 반드시 3000자 이상 작성하세요.
 
 ## Jekyll Front Matter 규칙
 포스트 맨 앞에 반드시 아래 형식을 코드 블록(```) 없이 그대로 출력하세요.
@@ -60,20 +78,24 @@ SYSTEM_PROMPT = """당신은 투자 정보·경제 교육 블로그 'BlackRabbit
 
 ---
 layout: post
-title: "제목"
+title: "제목 (20자 이상 60자 이하 필수)"
 date: YYYY-MM-DD
 categories: [카테고리]
 tags: [투자, 경제, 재테크]
-description: "SEO 설명 (150자 이내)"
+description: "SEO 설명 — 50자 이상 150자 이하 필수. 이 범위를 벗어나면 SEO 감점."
 ---
+
+### front matter 필드 SEO 요건 (반드시 준수)
+- **title**: 20자 이상 60자 이하. 너무 짧거나 길면 SEO 감점.
+- **description**: 50자 이상 150자 이하. 포스트 내용을 요약한 한 문장. 이 범위 밖이면 SEO 감점.
+- **categories**: 반드시 포함. 아래 목록 중 하나: [시장분석, 투자 기초, 경제 공부, ETF·펀드, 재테크, 뉴스 해설, 기업 분석, 기타]
 
 ## 금지 표현
 - "주식 추천" → "참고 지표", "분석 결과", "스크리닝 조건" 등으로 대체
 - "확실한 수익", "수익 보장" → "역사적 데이터 기준", "백테스트 결과" 등으로 대체
 - 특정 종목 매수·매도 직접 권유 금지
 
-## 면책 고지
-포스트 마지막에 다음 문구를 반드시 포함:
+## 면책 고지 (포스트 본문 맨 마지막에 반드시 포함)
 > ⚠️ **면책 고지**: 본 포스트는 정보 제공 목적으로 작성되었으며, 투자 권유가 아닙니다. 모든 투자 결정은 본인의 판단과 책임 하에 이루어져야 합니다.
 
 ## 작성 스타일
@@ -82,14 +104,19 @@ description: "SEO 설명 (150자 이내)"
 - 마크다운 헤더(##, ###), 표, 인용문, 번호 목록을 구조적으로 사용
 - 독자가 '다음에도 읽고 싶은' 블로그가 되도록 마무리에 핵심 요약 포함
 
-## 출력 형식 (반드시 준수)
+## 출력 형식 (반드시 이 순서대로)
 1. --- 로 시작하는 Jekyll front matter (코드 블록 없이 그대로)
 2. 포스트 본문 (마크다운)
-3. 면책 고지
-4. 마지막 줄: FILENAME_SUGGESTION: YYYY-MM-DD-english-slug.md (영문 소문자, 하이픈 구분)
+3. 면책 고지 인용문
+4. 맨 마지막 줄 (다른 내용 없이): FILENAME_SUGGESTION: YYYY-MM-DD-english-slug.md
 
-절대 하지 말 것: front matter를 ```yaml ... ``` 로 감싸지 마세요.
-파일명은 반드시 영문으로 제안하세요. 한글 파일명은 Jekyll sitemap 파싱 오류를 유발합니다."""
+### FILENAME_SUGGESTION 규칙
+- 영문 소문자 + 숫자 + 하이픈만 사용 (한글·공백·특수문자 금지)
+- 형식: YYYY-MM-DD-주제-요약.md (예: 2026-03-10-etf-investment-basics.md)
+- 반드시 .md 로 끝날 것
+- 한글 파일명은 Jekyll sitemap 파싱 오류를 유발하므로 절대 사용 금지
+
+절대 하지 말 것: front matter를 ```yaml ... ``` 로 감싸지 마세요."""
 
 EDIT_SYSTEM_PROMPT = """당신은 투자 정보·경제 교육 블로그 'BlackRabbit LAB'의 포스트를 수정하는 편집자입니다.
 
@@ -249,7 +276,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
 
   <!-- Header -->
   <div class="mb-8 text-center">
-    <div class="text-2xl font-bold mb-1"><span class="brand">BlackRabbit</span> LAB</div>
+    <div class="text-2xl font-bold mb-1">Black<span class="brand">Rabbit</span> LAB</div>
     <div class="text-gray-500 text-sm">투자·경제 블로그 AI Post Maker v2 — Ollama 로컬 실행</div>
   </div>
 
@@ -286,10 +313,11 @@ HTML_PAGE = r"""<!DOCTYPE html>
   </div>
 
   <!-- Mode Tabs -->
-  <div class="flex gap-1 mb-0">
+  <div class="flex gap-1 mb-0 flex-wrap">
     <button class="mode-tab active" id="modeTabCreate" onclick="switchMode('create')">새 포스트 생성</button>
     <button class="mode-tab" id="modeTabEdit" onclick="switchMode('edit')">포스트 수정</button>
     <button class="mode-tab" id="modeTabManage" onclick="switchMode('manage')">포스트 관리</button>
+    <button class="mode-tab" id="modeTabScheduler" onclick="switchMode('scheduler')">⏱ 자동 스케줄러</button>
   </div>
 
   <!-- ══════════════════ 생성 모드 ══════════════════ -->
@@ -297,7 +325,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
       <div class="md:col-span-2">
         <label class="block text-sm text-gray-400 mb-2">주제 <span class="text-red-400">*</span></label>
-        <input type="text" id="topic" class="input-base" placeholder="예: 이번 주 코스피 변동성 급등과 STOCKER의 대응 전략">
+        <input type="text" id="topic" class="input-base" placeholder="예: 이번 주 코스피 변동성 급등 원인과 개인 투자자 대응 전략">
       </div>
       <div>
         <label class="block text-sm text-gray-400 mb-2">카테고리 <span class="text-red-400">*</span></label>
@@ -308,6 +336,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
           <option value="ETF·펀드">ETF·펀드</option>
           <option value="재테크">재테크</option>
           <option value="뉴스 해설">뉴스 해설</option>
+          <option value="기업 분석">기업 분석</option>
           <option value="기타">기타</option>
         </select>
       </div>
@@ -536,6 +565,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
         <option>ETF·펀드</option>
         <option>재테크</option>
         <option>뉴스 해설</option>
+        <option>기업 분석</option>
         <option>기타</option>
       </select>
       <input type="text" id="manageSearch" class="input-base text-sm" style="width:180px;" placeholder="검색..." oninput="applyManageFilter()">
@@ -574,6 +604,122 @@ HTML_PAGE = r"""<!DOCTYPE html>
     </div>
   </div>
 
+  <!-- ══════════════════ 스케줄러 ══════════════════ -->
+  <div id="schedulerPanel" class="panel p-6 hidden mb-6" style="border-radius:0 8px 8px 8px;">
+
+    <!-- 서브 탭 -->
+    <div class="flex gap-1 mb-5">
+      <button class="tab-btn active" id="schTabList"    onclick="switchSchTab('list',this)">스케줄 목록</button>
+      <button class="tab-btn"        id="schTabAdd"     onclick="switchSchTab('add',this)">+ 스케줄 추가</button>
+      <button class="tab-btn"        id="schTabLog"     onclick="switchSchTab('log',this)">실행 로그</button>
+    </div>
+
+    <!-- 스케줄 목록 -->
+    <div id="schPanelList">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <div id="schRunnerStatus" class="text-xs font-mono text-gray-500">로딩 중...</div>
+        <div class="flex gap-2 flex-wrap">
+          <button onclick="runNowOpen()" class="btn-secondary text-xs">▶ 즉시 실행</button>
+          <button onclick="showTaskSetup()" class="btn-secondary text-xs">🖥 작업 스케줄러 설정</button>
+          <button onclick="loadSchList()" class="btn-secondary text-xs">↺ 새로고침</button>
+        </div>
+      </div>
+      <div id="taskSetupInfo" class="text-xs font-mono mb-3 p-3 rounded-lg bg-gray-900 border border-gray-700" style="display:none;">
+        <p class="text-green-400 font-semibold mb-2">🖥 Windows 작업 스케줄러 자동 등록</p>
+        <p class="text-gray-400 mb-1">아래 배치 파일을 <strong class="text-white">관리자 권한</strong>으로 실행하면 매 시간 자동 포스팅이 등록됩니다.</p>
+        <p class="text-yellow-400 font-mono mt-2 select-all">_tools/setup_windows_task.bat</p>
+        <p class="text-gray-500 mt-2">• 실행 로그: <span class="text-gray-300">_tools/scheduler.log</span></p>
+        <p class="text-gray-500">• 스케줄 설정은 이 화면에서 관리 (자동으로 저장됨)</p>
+        <p class="text-gray-500">• Ollama가 PC에서 실행 중이어야 합니다</p>
+        <button onclick="document.getElementById('taskSetupInfo').style.display='none'" class="mt-2 text-gray-600 hover:text-gray-400">닫기 ✕</button>
+      </div>
+      <div id="schList"><p class="text-xs text-gray-600 text-center py-8">로딩 중...</p></div>
+    </div>
+
+    <!-- 스케줄 추가 -->
+    <div id="schPanelAdd" class="hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">카테고리</label>
+          <select id="schAddCat" class="input-base text-sm">
+            <option>시장분석</option><option>투자 기초</option><option>경제 공부</option>
+            <option>ETF·펀드</option><option>재테크</option><option>뉴스 해설</option><option>기업 분석</option><option>기타</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">주기</label>
+          <select id="schAddFreq" class="input-base text-sm" onchange="schUpdateFreqUI()">
+            <option value="daily">매일</option>
+            <option value="weekly" selected>매주</option>
+            <option value="monthly">매월</option>
+          </select>
+        </div>
+        <div id="schOptWeekly">
+          <label class="block text-xs text-gray-500 mb-1">요일</label>
+          <select id="schAddDow" class="input-base text-sm">
+            <option value="0">월요일</option><option value="1">화요일</option>
+            <option value="2" selected>수요일</option><option value="3">목요일</option>
+            <option value="4">금요일</option><option value="5">토요일</option><option value="6">일요일</option>
+          </select>
+        </div>
+        <div id="schOptMonthly" class="hidden">
+          <label class="block text-xs text-gray-500 mb-1">매월 몇 일 (1~28)</label>
+          <input type="number" id="schAddDom" min="1" max="28" value="1" class="input-base text-sm">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">실행 시각</label>
+          <div class="flex gap-2 items-center">
+            <input type="number" id="schAddHour" min="0" max="23" value="9" class="input-base text-sm" style="width:70px;">
+            <span class="text-gray-500 text-sm">시</span>
+            <input type="number" id="schAddMinute" min="0" max="59" value="0" class="input-base text-sm" style="width:70px;">
+            <span class="text-gray-500 text-sm">분</span>
+          </div>
+        </div>
+        <div class="flex items-end">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="schAddEnabled" checked style="accent-color:#3ECF8E;width:16px;height:16px;">
+            <span class="text-sm text-gray-400">즉시 활성화</span>
+          </label>
+        </div>
+      </div>
+      <button onclick="schAddSubmit()" class="btn-primary">
+        <span id="schAddSpinner" class="spinner hidden"></span>
+        <span id="schAddBtnText">스케줄 등록</span>
+      </button>
+      <div id="schAddResult" class="text-xs mt-2 font-mono text-gray-500"></div>
+    </div>
+
+    <!-- 실행 로그 -->
+    <div id="schPanelLog" class="hidden">
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-xs text-gray-500">자동 포스팅 실행 기록</span>
+        <button onclick="loadSchLog()" class="btn-secondary text-xs">↺ 새로고침</button>
+      </div>
+      <div id="schLog"><p class="text-xs text-gray-600 text-center py-8">로딩 중...</p></div>
+    </div>
+
+
+    <!-- 즉시 실행 인라인 폼 -->
+    <div id="runNowInline" class="hidden mt-4 p-4 rounded" style="background:#111;border:1px solid #2a2a2a;">
+      <div class="flex gap-3 items-end flex-wrap">
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">카테고리</label>
+          <select id="runNowCat" class="input-base text-sm">
+            <option>시장분석</option><option>투자 기초</option><option>경제 공부</option>
+            <option>ETF·펀드</option><option>재테크</option><option>뉴스 해설</option><option>기업 분석</option><option>기타</option>
+          </select>
+        </div>
+        <button onclick="runNowExec()" class="btn-primary">
+          <span id="runNowSpinner" class="spinner hidden"></span>
+          <span id="runNowBtnText">실행</span>
+        </button>
+        <button onclick="runNowClose()" class="btn-secondary">취소</button>
+      </div>
+      <div id="runNowResult" class="text-xs mt-2 font-mono text-gray-500 whitespace-pre-wrap"></div>
+    </div>
+
+  </div>
+
   <div class="text-center text-gray-700 text-xs mt-8">
     BlackRabbit LAB AI Post Maker v2 · Powered by Ollama (완전 무료)
   </div>
@@ -595,7 +741,19 @@ HTML_PAGE = r"""<!DOCTYPE html>
   window.onload = function() {
     document.getElementById('postDate').value = new Date().toISOString().split('T')[0];
     checkOllama();
+    document.getElementById('modelSelect').addEventListener('change', function() {
+      if (this.value) saveModelToConfig(this.value);
+    });
   };
+
+  function saveModelToConfig(model) {
+    if (!model) return;
+    fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ default_model: model })
+    }).catch(function() {});
+  }
 
   // ── Ollama 상태 ──
   async function checkOllama() {
@@ -625,8 +783,16 @@ HTML_PAGE = r"""<!DOCTYPE html>
         dot.className = 'status-dot ok';
         text.textContent = `연결됨 — 모델 ${models.length}개`;
         select.innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
-        const preferred = models.find(m => m.startsWith('qwen2.5') || m.startsWith('qwen'));
-        if (preferred) select.value = preferred;
+        // 설정 파일의 default_model 우선, 없으면 qwen 계열 자동 선택
+        const configDefault = data.default_model || '';
+        const configMatch = configDefault && models.find(m => m === configDefault);
+        if (configMatch) {
+          select.value = configMatch;
+        } else {
+          const preferred = models.find(m => m.startsWith('qwen2.5') || m.startsWith('qwen'));
+          if (preferred) select.value = preferred;
+        }
+        saveModelToConfig(select.value);
       }
     } catch(e) {
       dot.className = 'status-dot err';
@@ -639,7 +805,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
   // ── 모드 전환 ──
   function switchMode(mode) {
     currentMode = mode;
-    ['create', 'edit', 'manage'].forEach(function(m) {
+    ['create', 'edit', 'manage', 'scheduler'].forEach(function(m) {
       document.getElementById(m + 'Panel').classList.toggle('hidden', m !== mode);
       const tabId = 'modeTab' + m.charAt(0).toUpperCase() + m.slice(1);
       document.getElementById(tabId).classList.toggle('active', m === mode);
@@ -647,6 +813,7 @@ HTML_PAGE = r"""<!DOCTYPE html>
     document.getElementById('outputPanel').classList.add('hidden');
     if (mode === 'edit') loadPostsList();
     if (mode === 'manage') loadManageList();
+    if (mode === 'scheduler') loadSchList();
   }
 
   // ── 접기/펼치기 ──
@@ -745,6 +912,54 @@ HTML_PAGE = r"""<!DOCTYPE html>
   // ═══════════════════════════════
   // 생성 모드
   // ═══════════════════════════════
+  function buildSeoFeedback(checks) {
+    const lines = [];
+    checks.forEach(function(c) {
+      if (c.ok !== true) lines.push('- ' + c.msg + ' → 반드시 수정하세요.');
+    });
+    return lines.join('\n');
+  }
+
+  async function generateWithSeoRetry(params) {
+    const MAX_SEO_RETRIES = 3;
+    let seoFeedback = '';
+    let finalScore = 0;
+
+    for (let attempt = 1; attempt <= MAX_SEO_RETRIES; attempt++) {
+      const btnText = attempt > 1 ? ('SEO 개선 재생성 (' + attempt + '/' + MAX_SEO_RETRIES + ')') : null;
+      setLoading('generate', true, btnText);
+
+      const res = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({}, params, { seoFeedback }))
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || '생성 실패.');
+
+      generatedMarkdown = data.content;
+      suggestedFilename = data.filename || '';
+
+      const seoResult = analyzeSEO(generatedMarkdown, suggestedFilename, null);
+      finalScore = seoResult.score;
+
+      if (finalScore >= 100) break;
+
+      seoFeedback = buildSeoFeedback(seoResult.checks);
+      if (attempt < MAX_SEO_RETRIES) {
+        showToast('SEO ' + finalScore + '점 → 자동 재생성 중 (' + attempt + '/' + MAX_SEO_RETRIES + ')', 'warn');
+      }
+    }
+
+    renderOutput('생성 결과 (SEO ' + finalScore + '점)');
+    if (finalScore < 100) {
+      showToast('최대 재시도 도달. SEO ' + finalScore + '점', 'warn');
+    } else {
+      showToast('포스트가 생성되었습니다!', 'success');
+    }
+    return finalScore;
+  }
+
   async function generatePost() {
     const model = document.getElementById('modelSelect').value;
     const topic = document.getElementById('topic').value.trim();
@@ -755,26 +970,15 @@ HTML_PAGE = r"""<!DOCTYPE html>
     const asDraft = document.getElementById('asDraft').checked;
     if (!model || model.includes('없음') || model.includes('불러올')) { showToast('Ollama 모델을 먼저 설치하세요.', 'error'); return; }
     if (!topic) { showToast('주제를 입력하세요.', 'error'); return; }
-    setLoading('generate', true);
     document.getElementById('seoPanel').classList.add('hidden');
     try {
-      const res = await fetch('/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model, topic, category, postDate, stockerData, extraContext })
-      });
-      const data = await res.json();
-      if (!res.ok || data.error) { showToast(data.error || '생성 실패.', 'error'); return; }
-      generatedMarkdown = data.content;
-      suggestedFilename = data.filename || '';
-      renderOutput('생성 결과');
-      showToast('포스트가 생성되었습니다!', 'success');
-      // 초안 자동 저장
+      await generateWithSeoRetry({ model, topic, category, postDate, stockerData, extraContext });
+      // 초안 자동 저장 (최종 성공 후)
       if (asDraft && suggestedFilename) {
         const ok = await doSaveDraft(suggestedFilename, generatedMarkdown);
         if (ok) showToast('초안 저장 완료: _drafts/' + suggestedFilename, 'success');
       }
-      // 유사도 검사 + SEO 분석 자동 실행
+      // 유사도 포함 최종 SEO 분석
       runSeoAndSimilarity(generatedMarkdown, suggestedFilename);
     } catch(e) {
       showToast('서버 오류: ' + e.message, 'error');
@@ -809,41 +1013,57 @@ HTML_PAGE = r"""<!DOCTYPE html>
     const titleM = content.match(/^title:\s*["']?(.+?)["']?\s*$/m);
     const descM = content.match(/^description:\s*["']?(.+?)["']?\s*$/m);
     const catM = content.match(/^categories:\s*\[(.+?)\]/m);
+    const tagsM = content.match(/^tags:\s*\[(.+?)\]/m);
 
     const title = titleM ? titleM[1].trim() : '';
     const desc = descM ? descM[1].trim() : '';
     const cats = catM ? catM[1].trim() : '';
+    const tags = tagsM ? tagsM[1].trim() : '';
 
-    // 제목 길이
+    // 본문 추출 (front matter 제외)
+    const bodyMatch = content.match(/^---[\s\S]*?---\s*([\s\S]*)$/);
+    const body = bodyMatch ? bodyMatch[1].trim() : '';
+    const bodyLen = body.length;
+
+    // 제목 길이 (15점)
     const tLen = title.length;
-    if (tLen >= 20 && tLen <= 60) { checks.push({ ok: true, msg: '제목 길이 양호 (' + tLen + '자)' }); score += 20; }
-    else if (tLen > 0) { checks.push({ ok: 'warn', msg: '제목 길이 주의 (' + tLen + '자, 권장 20-60자)' }); score += 10; }
+    if (tLen >= 20 && tLen <= 60) { checks.push({ ok: true, msg: '제목 길이 양호 (' + tLen + '자)' }); score += 15; }
+    else if (tLen > 0) { checks.push({ ok: 'warn', msg: '제목 길이 주의 (' + tLen + '자, 권장 20-60자)' }); score += 8; }
     else { checks.push({ ok: false, msg: '제목 없음 (front matter title 필드 확인)' }); }
 
-    // description 길이
+    // description 길이 (15점)
     const dLen = desc.length;
-    if (dLen >= 50 && dLen <= 150) { checks.push({ ok: true, msg: '설명 길이 양호 (' + dLen + '자)' }); score += 20; }
-    else if (dLen > 0) { checks.push({ ok: 'warn', msg: '설명 길이 주의 (' + dLen + '자, 권장 50-150자)' }); score += 10; }
+    if (dLen >= 50 && dLen <= 150) { checks.push({ ok: true, msg: '설명 길이 양호 (' + dLen + '자)' }); score += 15; }
+    else if (dLen > 0) { checks.push({ ok: 'warn', msg: '설명 길이 주의 (' + dLen + '자, 권장 50-150자)' }); score += 8; }
     else { checks.push({ ok: false, msg: '설명(description) 없음' }); }
 
-    // 카테고리
-    if (cats) { checks.push({ ok: true, msg: '카테고리 있음: [' + cats + ']' }); score += 15; }
+    // 카테고리 (10점)
+    if (cats) { checks.push({ ok: true, msg: '카테고리 있음: [' + cats + ']' }); score += 10; }
     else { checks.push({ ok: false, msg: '카테고리 없음' }); }
 
-    // 금지 표현
+    // 금지 표현 (15점)
     const banned = ['주식 추천', '확실한 수익', '수익 보장', '투자 권유합니다'];
     const found = banned.filter(function(b) { return content.includes(b); });
     if (found.length === 0) { checks.push({ ok: true, msg: '금지 표현 없음' }); score += 15; }
     else { checks.push({ ok: false, msg: '금지 표현 발견: ' + found.join(', ') }); }
 
-    // 면책 고지
+    // 면책 고지 (15점)
     if (content.includes('면책 고지')) { checks.push({ ok: true, msg: '면책 고지 포함' }); score += 15; }
     else { checks.push({ ok: false, msg: '면책 고지 없음 (포스트 하단에 추가하세요)' }); }
 
-    // 파일명 영문
+    // 파일명 영문 (10점)
     if (!filename) { checks.push({ ok: 'warn', msg: '파일명 미정' }); score += 5; }
-    else if (/^[a-z0-9\-_.]+$/i.test(filename)) { checks.push({ ok: true, msg: '파일명 영문 OK: ' + filename }); score += 15; }
+    else if (/^[a-z0-9\-_.]+$/i.test(filename)) { checks.push({ ok: true, msg: '파일명 영문 OK: ' + filename }); score += 10; }
     else { checks.push({ ok: false, msg: '파일명에 한글 포함 (Jekyll sitemap 오류 위험): ' + filename }); }
+
+    // tags 유무 (10점)
+    if (tags) { checks.push({ ok: true, msg: 'tags 있음: [' + tags + ']' }); score += 10; }
+    else { checks.push({ ok: false, msg: 'tags 없음 (SEO를 위해 관련 태그를 추가하세요)' }); }
+
+    // 본문 길이 (10점)
+    if (bodyLen >= 3000) { checks.push({ ok: true, msg: '본문 길이 양호 (' + bodyLen + '자)' }); score += 10; }
+    else if (bodyLen >= 1500) { checks.push({ ok: 'warn', msg: '본문이 다소 짧음 (' + bodyLen + '자, 권장 3000자 이상)' }); score += 5; }
+    else { checks.push({ ok: false, msg: '본문이 너무 짧음 (' + bodyLen + '자, 권장 3000자 이상)' }); }
 
     // 중복
     if (similarPost) {
@@ -949,6 +1169,9 @@ HTML_PAGE = r"""<!DOCTYPE html>
       document.getElementById('editContent').value = data.content;
       currentEditFilename = filename;
       currentEditIsDraft = false;
+      generatedMarkdown = '';
+      suggestedFilename = '';
+      document.getElementById('outputPanel').classList.add('hidden');
       showEditFilenameChip(filename);
       document.getElementById('saveBackBtn').classList.remove('hidden');
       document.getElementById('saveAsEditBtn').classList.remove('hidden');
@@ -966,6 +1189,9 @@ HTML_PAGE = r"""<!DOCTYPE html>
       document.getElementById('editContent').value = e.target.result;
       currentEditFilename = file.name;
       currentEditIsDraft = false;
+      generatedMarkdown = '';
+      suggestedFilename = '';
+      document.getElementById('outputPanel').classList.add('hidden');
       showEditFilenameChip(file.name);
       document.getElementById('saveBackBtn').classList.add('hidden');
       document.getElementById('saveAsEditBtn').classList.remove('hidden');
@@ -1117,7 +1343,12 @@ HTML_PAGE = r"""<!DOCTYPE html>
     const content = generatedMarkdown || document.getElementById('editContent').value;
     if (!content) { showToast('저장할 내용이 없습니다.', 'error'); return; }
     const ok = await doSavePost(filename, content);
-    if (ok) document.getElementById('saveAsEditRow').classList.add('hidden');
+    if (ok) {
+      document.getElementById('saveAsEditRow').classList.add('hidden');
+      currentEditFilename = filename;
+      currentEditIsDraft = false;
+      showEditFilenameChip(filename);
+    }
   }
 
   // ═══════════════════════════════
@@ -1306,10 +1537,10 @@ HTML_PAGE = r"""<!DOCTYPE html>
     showToast(filename + ' 다운로드 완료', 'success');
   }
 
-  function setLoading(mode, loading) {
+  function setLoading(mode, loading, text) {
     if (mode === 'generate') {
       document.getElementById('generateBtn').disabled = loading;
-      document.getElementById('generateBtnText').textContent = loading ? '생성 중...' : 'AI 포스트 생성';
+      document.getElementById('generateBtnText').textContent = loading ? (text || '생성 중...') : 'AI 포스트 생성';
       document.getElementById('generateSpinner').classList.toggle('hidden', !loading);
     } else {
       document.getElementById('aiEditBtn').disabled = loading;
@@ -1326,6 +1557,199 @@ HTML_PAGE = r"""<!DOCTYPE html>
     toast.textContent = msg;
     document.body.appendChild(toast);
     setTimeout(function() { toast.remove(); }, 3500);
+  }
+
+  // ═══════════════════════════════
+  // 스케줄러
+  // ═══════════════════════════════
+  var schCurrentSubTab = 'list';
+
+  function switchSchTab(name, btn) {
+    ['list','add','log'].forEach(function(t) {
+      document.getElementById('schPanel' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== name);
+      document.getElementById('schTab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === name);
+    });
+    schCurrentSubTab = name;
+    if (name === 'list') loadSchList();
+    if (name === 'log')  loadSchLog();
+  }
+
+  // ── 스케줄 목록 ──
+  async function loadSchList() {
+    try {
+    const res  = await fetch('/api/schedules');
+    const data = await res.json();
+    document.getElementById('schRunnerStatus').textContent =
+      data.running ? '🟢 스케줄러 실행 중' : '⚪ 스케줄러 정지';
+
+    const el = document.getElementById('schList');
+    if (!data.schedules || data.schedules.length === 0) {
+      el.innerHTML = '<p class="text-xs text-gray-600 text-center py-8">등록된 스케줄이 없습니다.<br>+ 스케줄 추가 탭에서 등록하세요.</p>';
+      return;
+    }
+    const freqL = { daily:'매일', weekly:'매주', monthly:'매월' };
+    const dowL  = ['월','화','수','목','금','토','일'];
+    let html = '<table class="manage-table"><thead><tr><th>카테고리</th><th>주기</th><th>실행 시각</th><th>다음 실행</th><th>상태</th><th></th></tr></thead><tbody>';
+    data.schedules.forEach(function(s) {
+      var when = '';
+      if (s.frequency === 'weekly')  when = dowL[s.day_of_week||0] + '요일 ';
+      if (s.frequency === 'monthly') when = (s.day_of_month||1) + '일 ';
+      when += String(s.hour||9).padStart(2,'0') + ':' + String(s.minute||0).padStart(2,'0');
+      var next = s.next_run ? s.next_run.replace('T',' ').substring(0,16) : '-';
+      var badge = s.enabled
+        ? '<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#0d2318;color:#3ECF8E;border:1px solid #3ECF8E44;">활성</span>'
+        : '<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#1a1a1a;color:#6b7280;border:1px solid #333;">정지</span>';
+      html += '<tr>' +
+        '<td class="text-white font-medium">' + s.category + '</td>' +
+        '<td class="font-mono" style="font-size:11px;color:#6b7280;">' + (freqL[s.frequency]||s.frequency) + '</td>' +
+        '<td class="font-mono" style="font-size:11px;color:#6b7280;">' + when + '</td>' +
+        '<td class="font-mono" style="font-size:11px;color:#6b7280;">' + next + '</td>' +
+        '<td>' + badge + '</td>' +
+        '<td style="white-space:nowrap;">' +
+          '<button onclick="schToggle(\'' + s.id + '\')" class="btn-secondary py-1 px-2 mr-1" style="font-size:12px;">' + (s.enabled ? '정지' : '활성화') + '</button>' +
+          '<button onclick="schDelete(\'' + s.id + '\')" class="btn-danger py-1 px-2" style="font-size:12px;">삭제</button>' +
+        '</td></tr>';
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+    } catch(e) {
+      console.error('loadSchList error:', e);
+      document.getElementById('schRunnerStatus').textContent = '⚪ 스케줄러 상태 확인 실패';
+      document.getElementById('schList').innerHTML = '<p class="text-xs text-red-400 text-center py-8">스케줄 목록을 불러오지 못했습니다.<br>서버가 실행 중인지 확인하세요.</p>';
+    }
+  }
+
+  // ── 주기 UI 업데이트 ──
+  function schUpdateFreqUI() {
+    var freq = document.getElementById('schAddFreq').value;
+    document.getElementById('schOptWeekly').classList.toggle('hidden', freq !== 'weekly');
+    document.getElementById('schOptMonthly').classList.toggle('hidden', freq !== 'monthly');
+  }
+
+  // ── 스케줄 추가 ──
+  async function schAddSubmit() {
+    var btn = document.getElementById('schAddBtnText');
+    var spinner = document.getElementById('schAddSpinner');
+    var resultEl = document.getElementById('schAddResult');
+    btn.textContent = '등록 중...';
+    spinner.classList.remove('hidden');
+    resultEl.textContent = '';
+    var payload = {
+      category:     document.getElementById('schAddCat').value,
+      frequency:    document.getElementById('schAddFreq').value,
+      day_of_week:  parseInt(document.getElementById('schAddDow').value),
+      day_of_month: parseInt(document.getElementById('schAddDom').value || 1),
+      hour:         parseInt(document.getElementById('schAddHour').value),
+      minute:       parseInt(document.getElementById('schAddMinute').value),
+      enabled:      document.getElementById('schAddEnabled').checked,
+    };
+    try {
+      var res  = await fetch('/api/schedules', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      var data = await res.json();
+      if (data.error) throw new Error(data.error);
+      showToast('스케줄 등록 완료', 'success');
+      resultEl.textContent = '✓ 등록됨 — 다음 실행: ' + (data.next_run || '').replace('T',' ').substring(0,16);
+      loadSchList();
+    } catch(e) {
+      showToast(e.message, 'error');
+      resultEl.textContent = '✗ ' + e.message;
+    } finally {
+      btn.textContent = '스케줄 등록';
+      spinner.classList.add('hidden');
+    }
+  }
+
+  async function schToggle(id) {
+    var res = await fetch('/api/schedules/' + id + '/toggle', { method:'POST' });
+    var data = await res.json();
+    if (data.error) { showToast(data.error, 'error'); return; }
+    loadSchList();
+  }
+
+  async function schDelete(id) {
+    if (!confirm('스케줄을 삭제할까요?')) return;
+    var res = await fetch('/api/schedules/' + id, { method:'DELETE' });
+    var data = await res.json();
+    if (data.error) { showToast(data.error, 'error'); return; }
+    var msg = data.win_task_removed
+      ? '삭제됐습니다. (Windows 작업 스케줄러 태스크도 함께 제거됨)'
+      : '삭제됐습니다.';
+    showToast(msg, 'success');
+    loadSchList();
+  }
+
+  // ── 실행 로그 ──
+  async function loadSchLog() {
+    try {
+    var res  = await fetch('/api/log');
+    var data = await res.json();
+    var el   = document.getElementById('schLog');
+    if (!data.items || data.items.length === 0) {
+      el.innerHTML = '<p class="text-xs text-gray-600 text-center py-8">실행 기록이 없습니다.</p>';
+      return;
+    }
+    var html = '<table class="manage-table"><thead><tr><th>일시</th><th>카테고리</th><th>파일명</th><th>결과</th></tr></thead><tbody>';
+    data.items.forEach(function(item) {
+      var ts    = item.timestamp ? item.timestamp.replace('T',' ').substring(0,16) : '-';
+      var badge = item.ok
+        ? '<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#0d2318;color:#3ECF8E;border:1px solid #3ECF8E44;">성공</span>'
+        : '<span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#2a0a0a;color:#ef4444;border:1px solid #ef444444;" title="' + (item.error||'') + '">실패</span>';
+      html += '<tr>' +
+        '<td class="font-mono" style="font-size:11px;color:#6b7280;">' + ts + '</td>' +
+        '<td class="text-white" style="font-size:13px;">' + item.category + '</td>' +
+        '<td class="font-mono" style="font-size:11px;color:#9ca3af;">' + (item.filename||'-') + '</td>' +
+        '<td>' + badge + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+    } catch(e) {
+      console.error('loadSchLog error:', e);
+      document.getElementById('schLog').innerHTML = '<p class="text-xs text-red-400 text-center py-8">실행 기록을 불러오지 못했습니다.<br>서버가 실행 중인지 확인하세요.</p>';
+    }
+  }
+
+
+  // ── Windows 작업 스케줄러 안내 ──
+  function showTaskSetup() {
+    var el = document.getElementById('taskSetupInfo');
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  // ── 즉시 실행 ──
+  function runNowOpen() {
+    document.getElementById('runNowInline').classList.remove('hidden');
+    document.getElementById('runNowResult').textContent = '';
+  }
+  function runNowClose() {
+    document.getElementById('runNowInline').classList.add('hidden');
+  }
+
+  async function runNowExec() {
+    var category = document.getElementById('runNowCat').value;
+    var model    = document.getElementById('modelSelect').value;
+    if (!model || model.includes('없음') || model.includes('불러올')) {
+      showToast('상단 Ollama 패널에서 모델을 먼저 선택하세요.', 'error'); return;
+    }
+    var btn = document.getElementById('runNowBtnText');
+    var spinner = document.getElementById('runNowSpinner');
+    var resultEl = document.getElementById('runNowResult');
+    btn.textContent = '생성 중...';
+    spinner.classList.remove('hidden');
+    resultEl.textContent = 'AI가 포스트를 생성 중입니다...\n(모델에 따라 수 분 소요)';
+    try {
+      var res  = await fetch('/api/run-now', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ category, model }) });
+      var data = await res.json();
+      if (data.error) throw new Error(data.error);
+      resultEl.textContent = '✓ 완료\n파일: ' + data.filename + '\nGit: ' + (data.git && data.git.ok ? '배포 성공' : (data.git && data.git.error ? data.git.error : '실패'));
+      showToast('포스팅 완료: ' + data.filename, 'success');
+      loadSchLog();
+    } catch(e) {
+      resultEl.textContent = '✗ ' + e.message;
+      showToast(e.message, 'error');
+    } finally {
+      btn.textContent = '실행';
+      spinner.classList.add('hidden');
+    }
   }
 </script>
 </body>
@@ -1546,32 +1970,40 @@ def git_deploy(message: str) -> dict:
             add_targets.append('_drafts/')
         subprocess.run(
             [git, 'add'] + add_targets,
-            cwd=PROJECT_ROOT, check=True, capture_output=True, text=True
+            cwd=PROJECT_ROOT, check=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         # git commit
         commit = subprocess.run(
             [git, 'commit', '-m', message],
-            cwd=PROJECT_ROOT, capture_output=True, text=True
+            cwd=PROJECT_ROOT,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        commit_out = commit.stdout.strip()
+        c_out = (commit.stdout or b'').decode('utf-8', errors='replace').strip()
+        c_err = (commit.stderr or b'').decode('utf-8', errors='replace').strip()
         if commit.returncode != 0:
-            if 'nothing to commit' in commit_out or 'nothing to commit' in commit.stderr:
+            combined = c_out + c_err
+            if 'nothing to commit' in combined:
                 return {'error': '커밋할 변경 사항이 없습니다. 먼저 파일을 저장하세요.'}
-            return {'error': commit.stderr or commit_out or 'commit 실패'}
+            return {'error': c_err or c_out or 'commit 실패'}
         # git push
         push = subprocess.run(
             [git, 'push'],
-            cwd=PROJECT_ROOT, capture_output=True, text=True
+            cwd=PROJECT_ROOT,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
+        p_out = (push.stdout or b'').decode('utf-8', errors='replace').strip()
+        p_err = (push.stderr or b'').decode('utf-8', errors='replace').strip()
         if push.returncode != 0:
-            return {'error': push.stderr or push.stdout or 'push 실패'}
-        output = commit_out
-        if push.stdout.strip():
-            output += '\n' + push.stdout.strip()
+            return {'error': p_err or p_out or 'push 실패'}
+        output = c_out
+        if p_out:
+            output += '\n' + p_out
         print(f"  Git 배포 완료: {message}")
         return {'ok': True, 'output': output or '배포 완료'}
     except subprocess.CalledProcessError as e:
-        return {'error': e.stderr or str(e)}
+        raw_err = e.stderr or b''
+        return {'error': raw_err.decode('utf-8', errors='replace') if isinstance(raw_err, bytes) else str(raw_err)}
     except FileNotFoundError:
         return {'error': f'git을 찾을 수 없습니다. (시도: {git})\n'
                          f'해결: git을 설치하거나 시스템 PATH에 추가하세요.\n'
@@ -1590,7 +2022,8 @@ def get_ollama_models() -> dict:
         with urllib.request.urlopen(req, timeout=5) as resp:
             data = json.loads(resp.read())
             models = [m["name"] for m in data.get("models", [])]
-            return {"models": models}
+            cfg = load_config()
+            return {"models": models, "default_model": cfg.get("default_model", "")}
     except urllib.error.URLError:
         return {"error": "Ollama 서버에 연결할 수 없습니다."}
     except Exception as e:
@@ -1667,7 +2100,7 @@ def call_ollama(model: str, system: str, user: str) -> dict:
             {"role": "user", "content": user},
         ],
         "stream": False,
-        "options": {"num_predict": 4096},
+        "options": {"num_predict": -1},
     }
     body = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
@@ -1676,23 +2109,27 @@ def call_ollama(model: str, system: str, user: str) -> dict:
         headers={"Content-Type": "application/json"},
     )
     try:
-        with urllib.request.urlopen(req, timeout=300) as resp:
+        with urllib.request.urlopen(req, timeout=None) as resp:
             result = json.loads(resp.read())
             content = result.get("message", {}).get("content", "")
         if not content:
             return {"error": "모델에서 응답이 없습니다."}
         content = clean_frontmatter(content)
+        # FILENAME_SUGGESTION 추출: 백틱·볼드·대소문자·위치 무관하게 검색
         filename = ""
-        lines = content.strip().split("\n")
-        for i, line in enumerate(lines):
-            if line.strip().startswith("FILENAME_SUGGESTION:"):
-                filename = line.replace("FILENAME_SUGGESTION:", "").strip()
-                lines = [l for j, l in enumerate(lines) if j != i]
-                content = "\n".join(lines).rstrip()
-                break
+        fn_match = re.search(
+            r'FILENAME_SUGGESTION:\s*[`*]*([a-zA-Z0-9][a-zA-Z0-9\-_.]*\.md)[`*]*',
+            content, re.IGNORECASE
+        )
+        if fn_match:
+            filename = fn_match.group(1).strip()
+            # 파일명 줄 전체 제거 (앞뒤 개행 포함)
+            content = re.sub(
+                r'\n?[`*]*FILENAME_SUGGESTION:[^\n]+', '', content, flags=re.IGNORECASE
+            ).strip()
         return {"content": content, "filename": filename}
     except urllib.error.URLError:
-        return {"error": "Ollama 서버에 연결할 수 없습니다."}
+        return {"error": "Ollama 서버에 연결할 수 없습니다. (Ollama가 실행 중인지 확인하세요)"}
     except Exception as e:
         return {"error": f"오류: {str(e)}"}
 
@@ -1704,14 +2141,17 @@ def generate_post(data: dict) -> dict:
     post_date = data.get("postDate", "")
     stocker_data = data.get("stockerData", "")
     extra_context = data.get("extraContext", "")
+    seo_feedback = data.get("seoFeedback", "")
 
     parts = [f"**주제**: {topic}", f"**카테고리**: {category}"]
     if post_date:
         parts.append(f"**날짜**: {post_date}")
     if stocker_data:
-        parts.append(f"\n**STOCKER 데이터**:\n{stocker_data}")
+        parts.append(f"\n**참고 데이터**:\n{stocker_data}")
     if extra_context:
         parts.append(f"\n**추가 컨텍스트**:\n{extra_context}")
+    if seo_feedback:
+        parts.append(f"\n**⚠ SEO 개선 필수사항 (이전 생성에서 누락)**:\n{seo_feedback}")
     parts.append("\n위 정보를 바탕으로 BlackRabbit LAB 블로그 포스트를 작성해주세요.")
 
     return call_ollama(model, SYSTEM_PROMPT, "\n".join(parts))
@@ -1734,6 +2174,204 @@ def edit_post(data: dict) -> dict:
 
 
 # ──────────────────────────────────────────────
+# 스케줄러 — 설정 / 로그
+# ──────────────────────────────────────────────
+
+def load_config() -> dict:
+    if os.path.isfile(CONFIG_FILE):
+        try:
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"schedules": [], "default_model": "qwen2.5:7b"}
+
+
+def save_config(cfg: dict):
+    with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, ensure_ascii=False, indent=2)
+
+
+def load_log() -> list:
+    if os.path.isfile(LOG_FILE):
+        try:
+            with open(LOG_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+
+def append_log(entry: dict):
+    logs = load_log()
+    logs.insert(0, entry)
+    with open(LOG_FILE, "w", encoding="utf-8") as f:
+        json.dump(logs[:200], f, ensure_ascii=False, indent=2)
+
+
+# ──────────────────────────────────────────────
+# 스케줄러 — next_run 계산
+# ──────────────────────────────────────────────
+
+def calc_next_run(schedule: dict, after: datetime = None) -> str:
+    now    = after or datetime.now()
+    freq   = schedule.get("frequency", "weekly")
+    hour   = int(schedule.get("hour", 9))
+    minute = int(schedule.get("minute", 0))
+    dow    = int(schedule.get("day_of_week", 0))   # 0=월 ~ 6=일
+    dom    = int(schedule.get("day_of_month", 1))  # 1~28
+
+    if freq == "daily":
+        candidate = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        if candidate <= now:
+            candidate += timedelta(days=1)
+        return candidate.isoformat()
+
+    elif freq == "weekly":
+        days_ahead = (dow - now.weekday()) % 7
+        candidate = (now + timedelta(days=days_ahead)).replace(
+            hour=hour, minute=minute, second=0, microsecond=0)
+        if candidate <= now:
+            candidate += timedelta(weeks=1)
+        return candidate.isoformat()
+
+    else:  # monthly
+        dom = min(dom, 28)
+        candidate = now.replace(day=dom, hour=hour, minute=minute, second=0, microsecond=0)
+        if candidate <= now:
+            m = now.month + 1 if now.month < 12 else 1
+            y = now.year + 1 if now.month == 12 else now.year
+            candidate = candidate.replace(year=y, month=m)
+        return candidate.isoformat()
+
+
+# ──────────────────────────────────────────────
+# 스케줄러 — 자동 포스팅 실행
+# ──────────────────────────────────────────────
+
+def get_recent_titles(limit: int = 20) -> list:
+    titles = []
+    if not os.path.isdir(POSTS_DIR):
+        return titles
+    files = sorted(
+        [f for f in os.listdir(POSTS_DIR) if f.endswith(".md")], reverse=True
+    )[:limit]
+    for fname in files:
+        try:
+            with open(os.path.join(POSTS_DIR, fname), "r", encoding="utf-8") as f:
+                for line in f:
+                    m = re.match(r'^title:\s*["\']?(.+?)["\']?\s*$', line)
+                    if m:
+                        titles.append(m.group(1).strip())
+                        break
+        except Exception:
+            titles.append(fname)
+    return titles
+
+
+def run_auto_post(schedule_id: str, category: str, model: str) -> dict:
+    """카테고리 기반 주제 자동 선정 → 포스트 생성 → 저장 → git 배포."""
+    now      = datetime.now()
+    date_str = now.strftime("%Y-%m-%d")
+    recent   = get_recent_titles(20)
+    recent_text = "\n".join(f"- {t}" for t in recent) if recent else "없음"
+
+    print(f"  [Auto] 실행: {category} ({date_str})")
+
+    user_msg = (
+        f"**카테고리**: {category}\n"
+        f"**오늘 날짜**: {date_str}\n\n"
+        f"아래는 이미 발행된 포스트 제목입니다. 중복되지 않는 새로운 주제를 선택해 포스트를 작성하세요:\n"
+        f"{recent_text}\n\n"
+        f"독자에게 실질적으로 도움이 되는 풍부한 예시와 데이터를 포함하세요."
+    )
+
+    result = call_ollama(model, SYSTEM_PROMPT, user_msg)
+    if "error" in result:
+        append_log({"id": str(uuid.uuid4())[:8], "schedule_id": schedule_id,
+                    "category": category, "filename": None,
+                    "timestamp": now.isoformat(), "ok": False, "error": result["error"]})
+        return {"ok": False, "error": result["error"]}
+
+    content  = result.get("content", "").strip() + "\n"
+    filename = result.get("filename", "") or f"{date_str}-auto-{str(uuid.uuid4())[:6]}.md"
+    if not re.match(r'^\d{4}-\d{2}-\d{2}-', filename):
+        filename = f"{date_str}-{filename}"
+
+    os.makedirs(POSTS_DIR, exist_ok=True)
+    dest = os.path.join(POSTS_DIR, filename)
+    with open(dest, "w", encoding="utf-8", newline="\n") as f:
+        f.write(content)
+    print(f"  [Auto] 저장: {filename}")
+
+    git_result = git_deploy(f"[자동] {category} 포스트: {filename}")
+    if git_result.get("ok"):
+        print(f"  [Auto] Git 완료: {git_result.get('output','')}")
+    else:
+        print(f"  [Auto] Git 오류: {git_result.get('error','')}")
+
+    log_entry = {
+        "id": str(uuid.uuid4())[:8], "schedule_id": schedule_id,
+        "category": category, "filename": filename,
+        "timestamp": now.isoformat(),
+        "ok": git_result.get("ok", False),
+        "error": git_result.get("error", ""),
+    }
+    append_log(log_entry)
+    return {"ok": True, "filename": filename, "git": git_result}
+
+
+# ──────────────────────────────────────────────
+# 스케줄러 — 백그라운드 루프
+# ──────────────────────────────────────────────
+
+_scheduler_running = False
+
+
+def _scheduler_loop():
+    print("  [Scheduler] 시작")
+    while _scheduler_running:
+        now = datetime.now()
+        cfg = load_config()
+        changed = False
+        for sch in cfg.get("schedules", []):
+            if not sch.get("enabled", True):
+                continue
+            try:
+                next_run = datetime.fromisoformat(sch.get("next_run", ""))
+            except Exception:
+                continue
+            if now >= next_run:
+                model = cfg.get("default_model", "qwen2.5:7b")
+                threading.Thread(
+                    target=run_auto_post,
+                    args=(sch["id"], sch["category"], model),
+                    daemon=True,
+                ).start()
+                sch["last_run"] = now.isoformat()
+                sch["next_run"] = calc_next_run(sch, now)
+                changed = True
+                print(f"  [Scheduler] 실행: {sch['category']} → 다음: {sch['next_run']}")
+        if changed:
+            save_config(cfg)
+        time.sleep(30)
+    print("  [Scheduler] 종료")
+
+
+def start_scheduler():
+    global _scheduler_running
+    if _scheduler_running:
+        return
+    _scheduler_running = True
+    threading.Thread(target=_scheduler_loop, daemon=True).start()
+
+
+def stop_scheduler():
+    global _scheduler_running
+    _scheduler_running = False
+
+
+# ──────────────────────────────────────────────
 # HTTP Handler
 # ──────────────────────────────────────────────
 
@@ -1749,41 +2387,6 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(body)
-
-    def do_GET(self):
-        path = self.path.split("?")[0]
-        query = self.path[len(path) + 1:] if "?" in self.path else ""
-
-        if path in ("/", "/index.html"):
-            self.send_response(200)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(HTML_PAGE.encode("utf-8"))
-
-        elif path == "/ollama-models":
-            self.send_json(200, get_ollama_models())
-
-        elif path == "/posts-list":
-            self.send_json(200, get_posts_list())
-
-        elif path == "/posts-info":
-            self.send_json(200, get_posts_info())
-
-        elif path == "/post-content":
-            params = urllib.parse.parse_qs(query)
-            filename = params.get("file", [""])[0]
-            is_draft = params.get("draft", ["0"])[0] == "1"
-            if not filename:
-                self.send_json(400, {"error": "file 파라미터가 필요합니다."})
-            else:
-                self.send_json(200, get_post_content(filename, is_draft))
-
-        elif path == "/history":
-            self.send_json(200, get_history())
-
-        else:
-            self.send_response(404)
-            self.end_headers()
 
     def do_POST(self):
         try:
@@ -1896,6 +2499,127 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 self.send_json(200, result)
 
+        # ── 스케줄러 API ──
+        elif self.path == "/api/schedules":
+            cfg = load_config()
+            sch = {
+                "id":           str(uuid.uuid4())[:8],
+                "category":     data.get("category", "투자 기초"),
+                "frequency":    data.get("frequency", "weekly"),
+                "day_of_week":  int(data.get("day_of_week", 0)),
+                "day_of_month": int(data.get("day_of_month", 1)),
+                "hour":         int(data.get("hour", 9)),
+                "minute":       int(data.get("minute", 0)),
+                "enabled":      bool(data.get("enabled", True)),
+                "last_run":     None,
+                "next_run":     None,
+            }
+            sch["next_run"] = calc_next_run(sch)
+            cfg.setdefault("schedules", []).append(sch)
+            save_config(cfg)
+            print(f"  [Scheduler] 스케줄 추가: {sch['category']} / {sch['frequency']} → {sch['next_run']}")
+            self.send_json(200, {"ok": True, "id": sch["id"], "next_run": sch["next_run"]})
+
+        elif re.match(r'^/api/schedules/[^/]+/toggle$', self.path):
+            sch_id = self.path.split("/")[3]
+            cfg    = load_config()
+            for s in cfg.get("schedules", []):
+                if s["id"] == sch_id:
+                    s["enabled"] = not s["enabled"]
+                    if s["enabled"] and not s.get("next_run"):
+                        s["next_run"] = calc_next_run(s)
+                    save_config(cfg)
+                    self.send_json(200, {"ok": True, "enabled": s["enabled"]})
+                    return
+            self.send_json(404, {"error": "스케줄을 찾을 수 없습니다."})
+
+        elif self.path == "/api/run-now":
+            category = data.get("category", "투자 기초")
+            cfg      = load_config()
+            model    = data.get("model") or cfg.get("default_model", "qwen2.5:7b")
+            print(f"  [Scheduler] 즉시 실행: {category}")
+            result   = run_auto_post("manual", category, model)
+            self.send_json(200 if result.get("ok") else 400, result)
+
+        elif self.path == "/api/config":
+            cfg = load_config()
+            if "default_model" in data:
+                cfg["default_model"] = data["default_model"]
+            save_config(cfg)
+            self.send_json(200, {"ok": True})
+
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_GET(self):
+        path  = self.path.split("?")[0]
+        query = self.path[len(path) + 1:] if "?" in self.path else ""
+
+        if path in ("/", "/index.html"):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+            self.wfile.write(HTML_PAGE.encode("utf-8"))
+
+        elif path == "/ollama-models":
+            self.send_json(200, get_ollama_models())
+
+        elif path == "/posts-list":
+            self.send_json(200, get_posts_list())
+
+        elif path == "/posts-info":
+            self.send_json(200, get_posts_info())
+
+        elif path == "/post-content":
+            params = urllib.parse.parse_qs(query)
+            filename = params.get("file", [""])[0]
+            is_draft = params.get("draft", ["0"])[0] == "1"
+            if not filename:
+                self.send_json(400, {"error": "file 파라미터가 필요합니다."})
+            else:
+                self.send_json(200, get_post_content(filename, is_draft))
+
+        elif path == "/history":
+            self.send_json(200, get_history())
+
+        # ── 스케줄러 GET ──
+        elif path == "/api/schedules":
+            cfg = load_config()
+            self.send_json(200, {"schedules": cfg.get("schedules", []), "running": _scheduler_running})
+
+        elif path == "/api/log":
+            self.send_json(200, {"items": load_log()})
+
+        elif path == "/api/config":
+            cfg = load_config()
+            self.send_json(200, {"default_model": cfg.get("default_model", "qwen2.5:7b")})
+
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_DELETE(self):
+        m = re.match(r'^/api/schedules/([^/]+)$', self.path.split("?")[0])
+        if m:
+            sch_id = m.group(1)
+            cfg    = load_config()
+            before = len(cfg.get("schedules", []))
+            cfg["schedules"] = [s for s in cfg.get("schedules", []) if s["id"] != sch_id]
+            if len(cfg["schedules"]) < before:
+                save_config(cfg)
+                win_task_removed = False
+                if not cfg["schedules"]:
+                    r = subprocess.run(
+                        ["schtasks", "/delete", "/tn", "BlackRabbitLAB_AutoPost", "/f"],
+                        capture_output=True
+                    )
+                    win_task_removed = r.returncode == 0
+                    if win_task_removed:
+                        print("  [Scheduler] Windows 작업 스케줄러 태스크 제거 완료")
+                self.send_json(200, {"ok": True, "win_task_removed": win_task_removed})
+            else:
+                self.send_json(404, {"error": "스케줄을 찾을 수 없습니다."})
         else:
             self.send_response(404)
             self.end_headers()
@@ -1903,7 +2627,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
@@ -1913,6 +2637,18 @@ class Handler(BaseHTTPRequestHandler):
 # ──────────────────────────────────────────────
 
 def main():
+    # 스케줄 next_run 재계산 (앱 재시작 후 만료된 항목 정리)
+    cfg = load_config()
+    changed = False
+    for s in cfg.get("schedules", []):
+        if s.get("enabled") and not s.get("next_run"):
+            s["next_run"] = calc_next_run(s)
+            changed = True
+    if changed:
+        save_config(cfg)
+
+    start_scheduler()
+
     server = HTTPServer(("localhost", PORT), Handler)
     print(f"\n  BlackRabbit LAB — AI Post Maker v2 (Ollama)")
     print(f"  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
@@ -1928,6 +2664,7 @@ def main():
     try:
         server.serve_forever()
     except KeyboardInterrupt:
+        stop_scheduler()
         print("\n  서버를 종료합니다.")
         server.shutdown()
 

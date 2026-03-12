@@ -2,6 +2,37 @@
 layout: default
 ---
 
+{% assign schema_image = page.image | default: "/assets/img/main.png" %}
+{% if schema_image contains "http" %}{% assign schema_image_url = schema_image %}{% else %}{% assign schema_image_url = schema_image | prepend: site.url %}{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ page.title | jsonify }},
+  "description": {{ page.description | default: page.content | strip_html | truncate: 160 | jsonify }},
+  "image": "{{ schema_image_url }}",
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "dateModified": "{{ page.date | date_to_xmlschema }}",
+  "author": {
+    "@type": "Organization",
+    "name": "BlackRabbit LAB"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "BlackRabbit LAB",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ site.url }}/assets/img/main.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ page.url | absolute_url }}"
+  }{% if page.tags.size > 0 %},
+  "keywords": {{ page.tags | join: ", " | jsonify }}{% endif %}
+}
+</script>
+
 <article class="mx-auto max-w-3xl px-4 sm:px-6 pt-10 pb-20">
 
   <!-- Back -->

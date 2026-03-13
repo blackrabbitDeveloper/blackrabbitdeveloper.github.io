@@ -17,8 +17,13 @@ npm-debug.log*
 __pycache__/
 *.py[cod]
 
-# 로컬 도구 — 히스토리 백업 (git 불필요)
+# 로컬 도구
 _tools/.history/
+_tools/build/
+_tools/dist/
+_tools/auto_log.json
+_tools/schedule_config.json
+_tools/scheduler.log
 
 # OS
 .DS_Store

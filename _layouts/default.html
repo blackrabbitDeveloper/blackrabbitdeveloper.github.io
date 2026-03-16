@@ -88,6 +88,23 @@
     (function(){var t=localStorage.getItem('theme');if(!t)t=window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#fafafa':'#0a0a0a');})();
   </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3935883771879302" crossorigin="anonymous"></script>
+
+  <!-- Google Analytics (Firebase) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyBInQqVJ45tkRlnlgPRxFVy7hjkIFH8Vss",
+      authDomain: "blackrabbit-lab-g.firebaseapp.com",
+      projectId: "blackrabbit-lab-g",
+      storageBucket: "blackrabbit-lab-g.firebasestorage.app",
+      messagingSenderId: "553649593524",
+      appId: "1:553649593524:web:745053f83ff57c55288be1",
+      measurementId: "G-2RYW9VP2SB"
+    };
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
 </head>
 <body class="min-h-screen bg-[#0a0a0a] font-sans text-white antialiased">
   <a href="#main" class="skip-link">본문으로 건너뛰기</a>

@@ -31,6 +31,8 @@ exclude:
   - src/
   - node_modules/
   - blog/
+  - .superpowers/
+  - docs/
 
 plugins:
   - jekyll-feed

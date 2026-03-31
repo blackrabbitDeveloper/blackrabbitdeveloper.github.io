@@ -29,3 +29,6 @@ _tools/scheduler.log
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# SuperPowers / 브레인스토밍 세션
+.superpowers/

@@ -146,13 +146,9 @@
   if (shareCopy) {
     shareCopy.addEventListener('click', function () {
       navigator.clipboard.writeText(window.location.href).then(function () {
-        var original = shareCopy.innerHTML;
         shareCopy.classList.add('share-copied');
-        var span = shareCopy.querySelector('span');
-        if (span) span.textContent = '복사됨!';
         setTimeout(function () {
           shareCopy.classList.remove('share-copied');
-          if (span) span.textContent = '링크 복사';
         }, 2000);
       });
     });
@@ -168,6 +164,46 @@
         item.style.display = text.includes(query) ? '' : 'none';
       });
     });
+  }
+
+  // ── Scroll progress bar (post pages only) ──
+  var progressBar = document.getElementById('scroll-progress');
+  var articleEl = document.querySelector('article');
+
+  if (progressBar && articleEl) {
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        requestAnimationFrame(function () {
+          var scrollTop = window.scrollY;
+          var docHeight = articleEl.offsetHeight - window.innerHeight;
+          if (docHeight > 0) {
+            var progress = Math.min((scrollTop / docHeight) * 100, 100);
+            progressBar.style.width = progress + '%';
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
+  // ── Fade-in on scroll ──
+  var fadeEls = document.querySelectorAll('.fade-in-up');
+  if (fadeEls.length > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var fadeObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    fadeEls.forEach(function (el) { fadeObserver.observe(el); });
+  } else {
+    // If reduced motion, make all visible immediately
+    fadeEls.forEach(function (el) { el.classList.add('visible'); });
   }
 
 })();

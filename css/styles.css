@@ -345,7 +345,6 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 0.75rem 0.75rem 0 0;
-  opacity: 0.15;
 }
 
 /* ── Editorial TOC ── */
@@ -519,8 +518,7 @@ body {
 [data-theme="light"] .featured-overlay { background: linear-gradient(to top, rgba(255,255,255,0.9), transparent); }
 [data-theme="light"] .featured-overlay .text-white { color: #1a1a1a; }
 
-/* Grid card thumb placeholder light */
-[data-theme="light"] .card-thumb-placeholder { opacity: 0.1; }
+/* Grid card thumb placeholder light — opacity now controlled by inline SVG stroke values */
 
 /* Editorial TOC light */
 [data-theme="light"] .toc-editorial { border-left-color: rgba(62,207,142,0.4); }

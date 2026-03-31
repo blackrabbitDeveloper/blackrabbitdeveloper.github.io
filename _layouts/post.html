@@ -50,7 +50,8 @@ layout: default
       </div>
     </div>
     {% else %}
-    <div class="relative h-[200px] sm:h-[280px] {% if post_cat == '시장분석' %}bg-gradient-to-br from-emerald-500/15 to-emerald-700/5{% elsif post_cat == '투자 기초' %}bg-gradient-to-br from-blue-400/15 to-blue-600/5{% elsif post_cat == '경제 공부' %}bg-gradient-to-br from-violet-400/15 to-violet-600/5{% elsif post_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400/15 to-amber-600/5{% elsif post_cat == '재테크' %}bg-gradient-to-br from-emerald-300/15 to-emerald-500/5{% elsif post_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400/15 to-pink-500/5{% elsif post_cat == '기업 분석' %}bg-gradient-to-br from-sky-400/15 to-sky-600/5{% else %}bg-gradient-to-br from-zinc-400/15 to-zinc-600/5{% endif %}">
+    <div class="relative h-[200px] sm:h-[280px] flex items-center justify-center {% if post_cat == '시장분석' %}bg-gradient-to-br from-emerald-500/15 to-emerald-700/5{% elsif post_cat == '투자 기초' %}bg-gradient-to-br from-blue-400/15 to-blue-600/5{% elsif post_cat == '경제 공부' %}bg-gradient-to-br from-violet-400/15 to-violet-600/5{% elsif post_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400/15 to-amber-600/5{% elsif post_cat == '재테크' %}bg-gradient-to-br from-emerald-300/15 to-emerald-500/5{% elsif post_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400/15 to-pink-500/5{% elsif post_cat == '기업 분석' %}bg-gradient-to-br from-sky-400/15 to-sky-600/5{% else %}bg-gradient-to-br from-zinc-400/15 to-zinc-600/5{% endif %}">
+      {% include category-icon.html cat=post_cat size="lg" %}
       <div class="absolute bottom-3 left-3 flex gap-1.5">
         {% for cat in page.categories %}
         <span class="rounded-full bg-black/60 px-3 py-1 font-mono text-[10px] font-medium text-brand backdrop-blur-sm">{{ cat }}</span>

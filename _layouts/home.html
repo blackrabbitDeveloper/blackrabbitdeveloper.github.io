@@ -15,7 +15,9 @@ layout: default
     {% if featured.image %}
     <img src="{{ featured.image | relative_url }}" alt="{{ featured.title | escape }}" class="featured-thumb" loading="eager" />
     {% else %}
-    <div class="featured-thumb {% if feat_cat == '시장분석' %}bg-gradient-to-br from-emerald-500/15 to-emerald-700/5{% elsif feat_cat == '투자 기초' %}bg-gradient-to-br from-blue-400/15 to-blue-600/5{% elsif feat_cat == '경제 공부' %}bg-gradient-to-br from-violet-400/15 to-violet-600/5{% elsif feat_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400/15 to-amber-600/5{% elsif feat_cat == '재테크' %}bg-gradient-to-br from-emerald-300/15 to-emerald-500/5{% elsif feat_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400/15 to-pink-500/5{% elsif feat_cat == '기업 분석' %}bg-gradient-to-br from-sky-400/15 to-sky-600/5{% else %}bg-gradient-to-br from-zinc-400/15 to-zinc-600/5{% endif %}"></div>
+    <div class="featured-thumb flex items-center justify-center {% if feat_cat == '시장분석' %}bg-gradient-to-br from-emerald-500/15 to-emerald-700/5{% elsif feat_cat == '투자 기초' %}bg-gradient-to-br from-blue-400/15 to-blue-600/5{% elsif feat_cat == '경제 공부' %}bg-gradient-to-br from-violet-400/15 to-violet-600/5{% elsif feat_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400/15 to-amber-600/5{% elsif feat_cat == '재테크' %}bg-gradient-to-br from-emerald-300/15 to-emerald-500/5{% elsif feat_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400/15 to-pink-500/5{% elsif feat_cat == '기업 분석' %}bg-gradient-to-br from-sky-400/15 to-sky-600/5{% else %}bg-gradient-to-br from-zinc-400/15 to-zinc-600/5{% endif %}">
+      {% include category-icon.html cat=feat_cat size="lg" %}
+    </div>
     {% endif %}
 
     <!-- Content -->
@@ -145,7 +147,9 @@ layout: default
       {% if post.image %}
       <img src="{{ post.image | relative_url }}" alt="{{ post.title | escape }}" class="card-thumb" loading="lazy" />
       {% else %}
-      <div class="card-thumb-placeholder {% if post_cat == '시장분석' %}bg-gradient-to-br from-emerald-500 to-emerald-700{% elsif post_cat == '투자 기초' %}bg-gradient-to-br from-blue-400 to-blue-600{% elsif post_cat == '경제 공부' %}bg-gradient-to-br from-violet-400 to-violet-600{% elsif post_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400 to-amber-600{% elsif post_cat == '재테크' %}bg-gradient-to-br from-emerald-300 to-emerald-500{% elsif post_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400 to-pink-500{% elsif post_cat == '기업 분석' %}bg-gradient-to-br from-sky-400 to-sky-600{% else %}bg-gradient-to-br from-zinc-400 to-zinc-600{% endif %}"></div>
+      <div class="card-thumb-placeholder {% if post_cat == '시장분석' %}bg-gradient-to-br from-emerald-500/15 to-emerald-700/5{% elsif post_cat == '투자 기초' %}bg-gradient-to-br from-blue-400/15 to-blue-600/5{% elsif post_cat == '경제 공부' %}bg-gradient-to-br from-violet-400/15 to-violet-600/5{% elsif post_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400/15 to-amber-600/5{% elsif post_cat == '재테크' %}bg-gradient-to-br from-emerald-300/15 to-emerald-500/5{% elsif post_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400/15 to-pink-500/5{% elsif post_cat == '기업 분석' %}bg-gradient-to-br from-sky-400/15 to-sky-600/5{% else %}bg-gradient-to-br from-zinc-400/15 to-zinc-600/5{% endif %}">
+        {% include category-icon.html cat=post_cat size="md" %}
+      </div>
       {% endif %}
 
       <!-- Card body -->

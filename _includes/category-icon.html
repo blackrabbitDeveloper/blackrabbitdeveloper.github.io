@@ -1,0 +1,44 @@
+{% comment %}
+  카테고리별 SVG 아이콘 + 텍스트 placeholder
+  파라미터: cat (downcased 카테고리명), size (sm/md/lg, 기본 md)
+{% endcomment %}
+{% assign icon_size = include.size | default: "md" %}
+{% if icon_size == "sm" %}{% assign px = 24 %}{% assign txt = "9px" %}{% assign gap = "1.5" %}
+{% elsif icon_size == "lg" %}{% assign px = 48 %}{% assign txt = "11px" %}{% assign gap = "3" %}
+{% else %}{% assign px = 32 %}{% assign txt = "10px" %}{% assign gap = "2" %}{% endif %}
+
+<div class="flex flex-col items-center gap-{{ gap }}">
+{% if include.cat == "기업 분석" %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(56,189,248,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="8" width="7" height="13" rx="1"/><line x1="6.5" y1="7" x2="6.5" y2="7.01"/><line x1="6.5" y1="11" x2="6.5" y2="11.01"/><line x1="6.5" y1="15" x2="6.5" y2="15.01"/><line x1="17.5" y1="12" x2="17.5" y2="12.01"/><line x1="17.5" y1="16" x2="17.5" y2="16.01"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(56,189,248,0.5);letter-spacing:0.1em;text-transform:uppercase;">기업 분석</span>
+
+{% elsif include.cat == "경제 공부" %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(167,139,250,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(167,139,250,0.5);letter-spacing:0.1em;text-transform:uppercase;">경제 공부</span>
+
+{% elsif include.cat == "투자 기초" %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(96,165,250,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(96,165,250,0.5);letter-spacing:0.1em;text-transform:uppercase;">투자 기초</span>
+
+{% elsif include.cat == "시장분석" %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(52,211,153,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(52,211,153,0.5);letter-spacing:0.1em;text-transform:uppercase;">시장분석</span>
+
+{% elsif include.cat == "재테크" %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(110,231,183,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(110,231,183,0.5);letter-spacing:0.1em;text-transform:uppercase;">재테크</span>
+
+{% elsif include.cat == "etf·펀드" %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(251,191,36,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(251,191,36,0.5);letter-spacing:0.1em;text-transform:uppercase;">ETF·펀드</span>
+
+{% elsif include.cat == "뉴스 해설" %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(244,114,182,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(244,114,182,0.5);letter-spacing:0.1em;text-transform:uppercase;">뉴스 해설</span>
+
+{% else %}
+  <svg width="{{ px }}" height="{{ px }}" viewBox="0 0 24 24" fill="none" stroke="rgba(161,161,170,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+  <span style="font-family:'JetBrains Mono',monospace;font-size:{{ txt }};color:rgba(161,161,170,0.5);letter-spacing:0.1em;text-transform:uppercase;">기타</span>
+
+{% endif %}
+</div>

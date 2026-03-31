@@ -39,7 +39,7 @@ layout: default
 
   <!-- Cover Image -->
   {% assign post_cat = page.categories | first | downcase %}
-  <div class="mb-8 overflow-hidden rounded-xl">
+  <div class="mb-8 overflow-hidden rounded-xl fade-in-up">
     {% if page.image %}
     <div class="relative">
       <img src="{{ page.image | relative_url }}" alt="{{ page.title | escape }}" class="w-full h-[200px] sm:h-[280px] object-cover" loading="eager" />
@@ -70,7 +70,7 @@ layout: default
   </div>
 
   <!-- Post Header -->
-  <header class="mb-8">
+  <header class="mb-8 pb-6 border-b border-white/[0.06]">
     <h1 class="text-2xl font-extrabold leading-tight text-white sm:text-3xl lg:text-4xl" style="letter-spacing:-0.02em;">
       {{ page.title }}
     </h1>
@@ -86,8 +86,6 @@ layout: default
       {% endfor %}
     </div>
     {% endif %}
-
-    <div class="mt-6 h-px bg-gradient-to-r from-brand/20 via-white/[0.06] to-transparent"></div>
   </header>
 
   <!-- TOC -->
@@ -117,7 +115,7 @@ layout: default
   </div>
 
   <!-- Share -->
-  <div class="mt-12 mb-2">
+  <div class="mt-12 mb-2 fade-in-up">
     <div class="share-circle-bar">
       <span class="font-mono text-xs text-zinc-600">공유</span>
       <div class="flex items-center gap-2">
@@ -135,7 +133,7 @@ layout: default
   </div>
 
   <!-- Disclaimer -->
-  <div class="disclaimer-box mt-14 rounded-xl border border-white/[0.06] bg-[#111111] p-5">
+  <div class="disclaimer-box mt-14 fade-in-up rounded-xl border border-white/[0.06] bg-[#111111] p-5">
     <p class="font-mono text-xs leading-relaxed text-zinc-600">
       ⚠️ 이 포스트는 교육 및 정보 제공 목적으로만 작성되었습니다. 투자 자문이 아니며, 모든 투자 결정은 본인의 책임입니다.
     </p>
@@ -158,7 +156,7 @@ layout: default
   {% endfor %}
 
   {% if related_posts.size > 0 %}
-  <div class="related-posts">
+  <div class="related-posts fade-in-up">
     <p class="font-mono text-xs text-zinc-600 mb-3">관련 포스트</p>
     <div class="related-grid">
       {% for rp in related_posts %}

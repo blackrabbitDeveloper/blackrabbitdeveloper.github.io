@@ -5,6 +5,7 @@ date: 2026-03-13
 categories: [기업 분석]
 tags: [AbbVie, 제약 산업, 주식 분석, 투자 기초, Biotech]
 description: "미국 제약 기업 AbbVie 의 핵심 제품 포트폴리오, 재무 건전성, 파이프라인 전망과 투자 리스크를 종합적으로 분석한 가이드입니다."
+image: /assets/img/posts/2026-03-13-abbvie-company-analysis-outlook.png
 ---
 
 # 애브비 (AbbVie) 기업 분석 및 향후 성장 동력과 리스크 평가

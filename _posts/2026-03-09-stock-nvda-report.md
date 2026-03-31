@@ -5,6 +5,7 @@ date: 2026-03-09
 categories: [기업 분석]
 tags: [투자, 경제, 엔비디아, GPU, AI, 반도체]
 description: "엔비디아의 사업 모델과 재무 건전성, 그리고 향후 성장 동력을 분석합니다. 투자자가 파악해야 할 리스크와 가치 평가 기준을 알아보세요."
+image: /assets/img/posts/2026-03-09-stock-nvda-report.png
 ---
 
 ## 엔비디아 (NVDA), AI 시대의 지배자를 넘어설 수 있을까? — 기업 분석 및 미래 전망

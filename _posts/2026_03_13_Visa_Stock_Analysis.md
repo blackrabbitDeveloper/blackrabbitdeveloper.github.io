@@ -5,6 +5,7 @@ date: 2026-03-13
 categories: [기업 분석]
 tags: [투자, 기업 분석, 비자, 재테크, 주식 분석]
 description: "세계 최대 결제 네트워크 비자 (VISA) 의 사업 모델과 재무 건전성, 향후 성장 전망을 데이터와 함께 분석합니다. 디지털 경제 핵심 인프라의 가치 평가에 도움이 되는 투자 가이드입니다."
+image: /assets/img/posts/2026_03_13_Visa_Stock_Analysis.png
 ---
 
 ## 서론: 디지털 경제의 핵심 인프라, 비자 (VISA) 란?

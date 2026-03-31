@@ -5,6 +5,7 @@ date: 2026-03-10
 categories: [기업 분석]
 tags: [마이크로소프트, 클라우드, AI, 주식분석, 재테크]
 description: "기술 거물 마이크로소프트의 사업 모델과 재무 건전성을 분석하고, 인공지능 (AI) 시대에 대한 향후 전망과 리스크 요인을 꼼꼼히 정리해 드립니다."
+image: /assets/img/posts/2026-03-10-msft-analysis-and-future-outlook.png
 ---
 
 ## 서론: 기술 산업에서 마이크로소프트의 위상 재정립

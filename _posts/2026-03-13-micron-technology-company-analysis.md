@@ -5,6 +5,7 @@ date: 2026-03-13
 categories: [기업 분석]
 tags: [MEMS, MICRON, AI 투자, 반도체]
 description: "미국 메모리 반도체 1강 마이크론의 사업 구조와 AI 시대의 기회, 리스크를 자세히 분석하여 투자자분들에게 핵심 포인트를 정리했습니다."
+image: /assets/img/posts/2026-03-13-micron-technology-company-analysis.png
 ---
 
 # 마이크론 테크놀로지(Micron Technology) 기업 분석 및 향후 전망

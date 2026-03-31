@@ -5,6 +5,7 @@ date: 2026-03-11
 categories: [기업 분석]
 tags: [투자, 경제, 재테크, Tesla, 전기차]
 description: "전 세계 자동차 시장을 선도하는 테슬라 (TSLA) 의 최신 재무 성과, 중국 및 미국 시장 경쟁 구도 변화와 향후 성장 동인, 그리고 투자 시 고려해야 할 핵심 리스크 요인에 대한 객관적 기업 분석 내용입니다"
+image: /assets/img/posts/2026-03-11-tesla-company-analysis-future-outlook.png
 ---
 
 ## 서론: 왜 테슬라는 여전히 주목받는가?

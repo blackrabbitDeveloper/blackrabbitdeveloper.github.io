@@ -5,6 +5,7 @@ date: 2026-03-10
 categories: [기업 분석]
 tags: ["메타", "엔터프라이즈 AI", "주식 연구", "기술 기업 분석", "광고 시장"]
 description: "구글과 경쟁하는 메타의 사업 모델, 핵심 광고 수익 구조, AI 전략 및 향후 전망에 대한 상세 기업 분석 기고"
+image: /assets/img/posts/2026-03-10-meta-future-outlook.png
 ---
 
 ## 서론 - 왜 메타를 분석해야 하는가?

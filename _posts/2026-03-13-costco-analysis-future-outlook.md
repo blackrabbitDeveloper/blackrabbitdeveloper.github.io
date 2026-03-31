@@ -5,6 +5,7 @@ date: 2026-03-13
 categories: [기업 분석]
 tags: [재미투자, 할바마트, 소모성 재화, 대형 소매업체, 기업가치평가]
 description: "미국의 대형 마트 리더인 코스트코의 사업 모델과 재무 구조를 상세히 분석하고, 향후 전망과 리스크 요인을 함께 설명합니다."
+image: /assets/img/posts/2026-03-13-costco-analysis-future-outlook.png
 ---
 
 # 코스트코 (Costco) 기업 분석 및 향후 전망

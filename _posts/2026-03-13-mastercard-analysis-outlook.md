@@ -5,6 +5,7 @@ date: 2026-03-13
 categories: [기업 분석]
 tags: [마스터카드, VISA, 결제 산업, 글로벌 ETF, AI 기술]
 description: "글로벌 결제 거대 기업 마스터카드의 재무 건전성, AI 기반 디지털 전략, 그리고 주요 위험 요소들을 데이터와 함께 꼼꼼히 정리해 드립니다."
+image: /assets/img/posts/2026-03-13-mastercard-analysis-outlook.png
 ---
 
 # 마스터카드 (Mastercard) 의 사업 모델과 향후 성장 가능성 분석

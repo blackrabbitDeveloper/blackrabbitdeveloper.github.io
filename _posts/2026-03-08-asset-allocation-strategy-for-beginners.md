@@ -5,6 +5,7 @@ date: 2026-03-08
 categories: [재테크]
 tags: [자산배분, 포트폴리오, 재테크, 투자 전략, 경제 교육]
 description: "단일 종목에 의존하지 않는 자산배분 개념과 실제 적용 방법, 위험 관리 전략을 통해 안정적인 투자의 첫걸음을 알아봅니다."
+image: /assets/img/posts/2026-03-08-asset-allocation-strategy-for-beginners.png
 ---
 
 # 자산배분과 위험 관리: '다양함'이 만들어내는 안정적인 성장률

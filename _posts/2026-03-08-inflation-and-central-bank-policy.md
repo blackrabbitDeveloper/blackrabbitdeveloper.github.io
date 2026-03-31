@@ -5,6 +5,7 @@ date: 2026-03-08
 categories: [경제 공부]
 tags: [인플레이션, 금리, 거시경제, 통화정책, 중앙은행]
 description: "중앙은행의 정책이 물가 상승과 내 자산 가치에 미치는 영향을 이해하는 경제 입문자를 위한 글입니다."
+image: /assets/img/posts/2026-03-08-inflation-and-central-bank-policy.png
 ---
 
 ## 인플레이션이란? 단순히 물가가 오르는 현상인가

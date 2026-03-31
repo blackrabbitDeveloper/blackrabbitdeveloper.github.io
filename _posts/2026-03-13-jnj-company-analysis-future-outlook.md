@@ -5,6 +5,7 @@ date: 2026-03-13
 categories: [기업 분석]
 tags: [주식 분석, 다국적 기업, 배당 투자, 의약품, 의료기기, 포트폴리오 전략]
 description: "존슨앤드존슨 (JNJ) 의 세 분할 구조, 역사적 재무 지표, 그리고 향후 성장 전망에 대해 깊이 있게 분석하여 배당 투자자와 장기 보유자의 가이드로 제공합니다."
+image: /assets/img/posts/2026-03-13-jnj-company-analysis-future-outlook.png
 ---
 
 # 존슨앤드존슨 (JNJ): 시간의 흐름이 증명하는 '블루칩'의 가치를 재확인하다

@@ -5,6 +5,7 @@ date: 2026-03-10
 categories: ["기업 분석"]
 tags: ["투자", "경제", "재테크", "반도체", "AI"]
 description: "브로드컴의 사업 구조·재무 성과·경쟁력을 분석하고, AI 시대 성장 동력과 투자 고려사항을 정리합니다."
+image: /assets/img/posts/2026-03-10-broadcom-ai-analysis-2026.png
 ---
 
 ## 서론

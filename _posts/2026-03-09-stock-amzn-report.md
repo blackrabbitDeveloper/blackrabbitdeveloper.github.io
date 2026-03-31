@@ -5,6 +5,7 @@ date: 2026-03-10
 categories: [기업 분석]
 tags: [아마존, AWS, 재테크, 기업 가치, 경제 공부]
 description: "세계 최대 IT 플랫폼 아마존의 사업 모델, 재무 건전성, 그리고 다가올 기술 변화를 중심으로 한 객관적인 기업 분석과 투자 참고 자료를 제공합니다."
+image: /assets/img/posts/2026-03-09-stock-amzn-report.png
 ---
 
 ## 서론: 단순 쇼핑몰을 넘어선 디지털 인프라

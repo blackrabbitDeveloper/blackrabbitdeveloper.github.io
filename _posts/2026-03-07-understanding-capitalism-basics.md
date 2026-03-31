@@ -5,6 +5,7 @@ date: 2026-03-07
 categories: [경제 공부]
 tags: [투자, 경제, 자본주의, 기초]
 description: "자본주의의 핵심 원리와 시장 메커니즘을 통해 투자자가 알아야 할 경제적 배경 지식을 쉽게 설명합니다."
+image: /assets/img/posts/2026-03-07-understanding-capitalism-basics.png
 ---
 
 ## 자본주의는 무엇을 뜻하는가?

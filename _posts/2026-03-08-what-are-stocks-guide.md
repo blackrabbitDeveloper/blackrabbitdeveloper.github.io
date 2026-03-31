@@ -5,6 +5,7 @@ date: 2026-03-08
 categories: [경제 공부]
 tags: [투자, 주식 기초, 경제 개념]
 description: "주식의 정의, 소유권, 시장 구조를 쉽게 설명하여 재테크 기초를 다질 수 있는 경제 공부 글입니다."
+image: /assets/img/posts/2026-03-08-what-are-stocks-guide.png
 ---
 
 ## 들어가기 전, 질문 하나 던져봅시다

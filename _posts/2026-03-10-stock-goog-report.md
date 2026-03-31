@@ -5,6 +5,7 @@ date: 2026-03-10
 categories: [기업 분석]
 tags: [투자, 경제, 재테크, 알파벳, 구글, AI 투자, 기술주]
 description: "AI 기술 발전과 클라우드 시장 확대 속에서의 알파벳의 사업 모델 변화와 재무 건전성을 객관적으로 분석합니다."
+image: /assets/img/posts/2026-03-10-stock-goog-report.png
 ---
 
 # 알파벳 (Alphabet): AI 시대의 구글, 여전히 무조건적인 성장인가?

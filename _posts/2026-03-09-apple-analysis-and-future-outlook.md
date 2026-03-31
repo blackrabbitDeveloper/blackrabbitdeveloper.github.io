@@ -5,6 +5,7 @@ date: 2026-03-09
 categories: [기업 분석]
 tags: [투자, 경제, 재테크, 애플, 기술 산업]
 description: "애플 (Apple) 의 현재 사업 구조와 재무 건전성을 분석하여 미래 성장 동력과 리스크를 설명하는 기업 분석 글입니다."
+image: /assets/img/posts/2026-03-09-apple-analysis-and-future-outlook.png
 ---
 
 안녕하세요, BlackRabbit LAB 입니다. 

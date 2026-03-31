@@ -5,6 +5,7 @@ date: 2026-03-09
 categories: [경제 공부]
 tags: [거시 경제, 금리, 국채, 재정 정책]
 description: "단순히 중앙은행의 통화 정책에만 주목하지 마세요. 국가 재정의 건전성과 국채 공급이 투자자의 손실과 수익을 좌우합니다."
+image: /assets/img/posts/2026-03-09-fiscal-policy-and-bond-market.png
 ---
 
 # 중앙은행과 국채 시장: '재정 정책'이 금리 동향을 좌우합니다

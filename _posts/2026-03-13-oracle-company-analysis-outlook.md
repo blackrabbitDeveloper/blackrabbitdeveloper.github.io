@@ -5,6 +5,7 @@ date: 2026-03-13
 categories: [기업 분석]
 tags: [Oracle, ORCL, 클라우드, AI, 엔터프라이즈, 투자 분석]
 description: "오라클 (Oracle) 의 클라우드 전환과 AI 도입 현황을 통해 향후 기업 가치를 분석하고 장기 투자 관점에서 고려해야 할 포인트를 상세히 정리했습니다."
+image: /assets/img/posts/2026-03-13-oracle-company-analysis-outlook.png
 ---
 
 ## 오라클 (Oracle), 단순한 데이터베이스 도구를 넘어선 클라우드 슈퍼파워?

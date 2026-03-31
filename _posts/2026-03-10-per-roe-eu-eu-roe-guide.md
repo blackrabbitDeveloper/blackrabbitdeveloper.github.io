@@ -5,6 +5,7 @@ date: 2026-03-10
 categories: [투자 기초]
 tags: [PER, ROE, ROE 설명, PER 설명, 주가평가, 재테크입문자]
 description: "초보 투자자가 반드시 알아야 할 PER 와 ROE 개념을 쉽고 정확하게 설명합니다. 수익성을 판단하고 저평가된 기업을 찾는 법을 배워보세요."
+image: /assets/img/posts/2026-03-10-per-roe-eu-eu-roe-guide.png
 ---
 
 # PER 와 ROE: 주식 가치의 두 가지 눈금

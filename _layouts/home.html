@@ -2,47 +2,42 @@
 layout: default
 ---
 
-<!-- Hero -->
-<section class="relative overflow-hidden px-4 pt-14 pb-12 sm:px-6 sm:pt-24 sm:pb-20">
-  <!-- Grid pattern -->
-  <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(62,207,142,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(62,207,142,0.025)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
-  <!-- Radial glow blob -->
-  <div class="pointer-events-none absolute inset-x-0 -top-20 h-[420px] bg-[radial-gradient(ellipse_60%_55%_at_50%_15%,rgba(62,207,142,0.11),transparent_70%)]"></div>
+<!-- Featured Post -->
+{% assign featured = site.posts.first %}
+{% if featured %}
+{% assign feat_read_min = featured.content | strip_html | size | divided_by: 350 | at_least: 1 %}
+{% assign feat_cat = featured.categories | first | downcase %}
+<section class="mx-auto max-w-5xl px-4 sm:px-6 pt-8 pb-6 sm:pt-14 sm:pb-10">
+  <a href="{{ featured.url | relative_url }}" class="featured-card group block no-underline fade-in-up"
+    data-categories="{{ featured.categories | join: ' ' | downcase | escape }}"
+    data-tags="{{ featured.tags | join: ' ' | downcase | escape }}">
+    <!-- Thumbnail -->
+    {% if featured.image %}
+    <img src="{{ featured.image | relative_url }}" alt="{{ featured.title | escape }}" class="featured-thumb" loading="eager" />
+    {% else %}
+    <div class="featured-thumb {% if feat_cat == '시장분석' %}bg-gradient-to-br from-emerald-500/15 to-emerald-700/5{% elsif feat_cat == '투자 기초' %}bg-gradient-to-br from-blue-400/15 to-blue-600/5{% elsif feat_cat == '경제 공부' %}bg-gradient-to-br from-violet-400/15 to-violet-600/5{% elsif feat_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400/15 to-amber-600/5{% elsif feat_cat == '재테크' %}bg-gradient-to-br from-emerald-300/15 to-emerald-500/5{% elsif feat_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400/15 to-pink-500/5{% elsif feat_cat == '기업 분석' %}bg-gradient-to-br from-sky-400/15 to-sky-600/5{% else %}bg-gradient-to-br from-zinc-400/15 to-zinc-600/5{% endif %}"></div>
+    {% endif %}
 
-  <div class="relative mx-auto max-w-4xl text-center">
-    <!-- Badge -->
-    <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/8 px-4 py-1.5 text-xs font-medium text-brand backdrop-blur-sm">
-      <span class="relative flex h-1.5 w-1.5">
-        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-75"></span>
-        <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand"></span>
-      </span>
-      BlackRabbit LAB 블로그
+    <!-- Content -->
+    <div class="p-5 sm:p-6">
+      <div class="mb-2 flex flex-wrap items-center gap-2">
+        <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-brand">FEATURED</span>
+        {% for cat in featured.categories %}
+        <span class="inline-flex items-center rounded border border-brand/25 bg-brand/8 px-2 py-0.5 font-mono text-[10px] font-medium text-brand">{{ cat }}</span>
+        {% endfor %}
+        <time datetime="{{ featured.date | date_to_xmlschema }}" class="font-mono text-[11px] text-zinc-600">{{ featured.date | date: "%Y-%m-%d" }}</time>
+        <span class="font-mono text-[11px] text-zinc-600">· {{ feat_read_min }}분</span>
+      </div>
+      <h2 class="text-xl font-bold leading-tight text-white sm:text-2xl lg:text-3xl transition-colors group-hover:text-brand" style="letter-spacing:-0.02em;">
+        {{ featured.title }}
+      </h2>
+      {% if featured.description %}
+      <p class="mt-2 text-sm text-zinc-500 line-clamp-2">{{ featured.description }}</p>
+      {% endif %}
     </div>
-
-    <!-- Title -->
-    <h2 class="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-      투자·경제 블로그
-    </h2>
-
-    <p class="mx-auto mt-4 max-w-2xl text-sm text-zinc-500 sm:text-base">
-      주식 · ETF · 거시경제 · 재테크<br class="sm:hidden" />
-      다양한 투자 개념 등을 정리하여 포스팅 합니다.
-    </p>
-
-    <!-- Quick links -->
-    <div class="mt-7 flex flex-wrap justify-center gap-2">
-      <a href="{{ '/tools/' | relative_url }}"
-        class="inline-flex items-center gap-1.5 rounded-lg border border-brand/30 bg-brand/10 px-4 py-2 text-sm font-medium text-brand transition hover:bg-brand/20 hover:border-brand/50">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        투자 계산기
-      </a>
-      <a href="https://blackrabbitlab.site" target="_blank" rel="noopener noreferrer"
-        class="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-medium text-zinc-400 transition hover:border-white/20 hover:text-white">
-        STOCKER 바로가기 ↗
-      </a>
-    </div>
-  </div>
+  </a>
 </section>
+{% endif %}
 
 <!-- Post List -->
 <div id="posts" class="mx-auto max-w-5xl px-4 sm:px-6">
@@ -126,51 +121,52 @@ layout: default
     {% endif %}
   </div>
 
-  <!-- Result count -->
-  <div class="mb-4">
+  <!-- Section label + Result count -->
+  <div class="mb-4 flex items-center justify-between">
+    <div class="section-label">LATEST POSTS</div>
     <p id="result-count" class="font-mono text-xs text-zinc-700">{{ site.posts.size }} posts</p>
   </div>
 
-  <!-- Post cards -->
-  <div id="post-list" class="grid gap-3">
+  <div id="post-list" class="post-grid">
     {% for post in site.posts %}
-    {% assign excerpt_text = post.content | strip_html | truncate: 300 %}
+    {% if forloop.first %}{% continue %}{% endif %}
+    {% assign read_min = post.content | strip_html | size | divided_by: 350 | at_least: 1 %}
+    {% assign post_cat = post.categories | first | downcase %}
     {% assign cat_joined = post.categories | join: " " %}
     <a
       href="{{ post.url | relative_url }}"
-      class="post-card group block rounded-xl border border-white/[0.08] bg-[#111111] p-5 text-left no-underline sm:p-6"
+      class="post-card group block rounded-xl border border-white/[0.08] bg-[#111111] text-left no-underline overflow-hidden fade-in-up"
       data-title="{{ post.title | downcase | escape }}"
       data-categories="{{ cat_joined | downcase | escape }}"
-      data-excerpt="{{ excerpt_text | downcase | escape }}"
+      data-excerpt="{{ post.content | strip_html | truncate: 300 | downcase | escape }}"
       data-tags="{{ post.tags | join: ' ' | downcase | escape }}"
     >
-      <!-- Meta row -->
-      <div class="mb-2.5 flex flex-wrap items-center gap-2">
-        {% for cat in post.categories %}
-        <span class="post-cat inline-flex items-center rounded border border-brand/25 bg-brand/8 px-2 py-0.5 font-mono text-[10px] font-medium text-brand">{{ cat }}</span>
-        {% endfor %}
-        <time datetime="{{ post.date | date_to_xmlschema }}" class="font-mono text-[11px] text-zinc-600">
-          {{ post.date | date: "%Y-%m-%d" }}
-        </time>
-      </div>
+      <!-- Thumbnail -->
+      {% if post.image %}
+      <img src="{{ post.image | relative_url }}" alt="{{ post.title | escape }}" class="card-thumb" loading="lazy" />
+      {% else %}
+      <div class="card-thumb-placeholder {% if post_cat == '시장분석' %}bg-gradient-to-br from-emerald-500 to-emerald-700{% elsif post_cat == '투자 기초' %}bg-gradient-to-br from-blue-400 to-blue-600{% elsif post_cat == '경제 공부' %}bg-gradient-to-br from-violet-400 to-violet-600{% elsif post_cat == 'etf·펀드' %}bg-gradient-to-br from-amber-400 to-amber-600{% elsif post_cat == '재테크' %}bg-gradient-to-br from-emerald-300 to-emerald-500{% elsif post_cat == '뉴스 해설' %}bg-gradient-to-br from-pink-400 to-pink-500{% elsif post_cat == '기업 분석' %}bg-gradient-to-br from-sky-400 to-sky-600{% else %}bg-gradient-to-br from-zinc-400 to-zinc-600{% endif %}"></div>
+      {% endif %}
 
-      <!-- Title -->
-      <h3 class="post-title text-base font-semibold leading-snug text-white transition-colors group-hover:text-brand sm:text-lg">
-        {{ post.title }}
-      </h3>
-
-      <!-- Excerpt -->
-      <p class="mt-1.5 text-sm leading-relaxed text-zinc-600 line-clamp-2">{{ excerpt_text }}</p>
-
-      <!-- Read more -->
-      <div class="mt-3 flex items-center gap-1 font-mono text-xs text-brand opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5">
-        읽기
-        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      <!-- Card body -->
+      <div class="p-4 sm:p-5">
+        <div class="mb-2 flex flex-wrap items-center gap-2">
+          {% for cat in post.categories %}
+          <span class="post-cat inline-flex items-center rounded border border-brand/25 bg-brand/8 px-2 py-0.5 font-mono text-[10px] font-medium text-brand">{{ cat }}</span>
+          {% endfor %}
+        </div>
+        <h3 class="post-title text-base font-semibold leading-snug text-white transition-colors group-hover:text-brand">
+          {{ post.title }}
+        </h3>
+        <div class="mt-2 flex items-center gap-2 font-mono text-[11px] text-zinc-600">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+          <span>· {{ read_min }}분</span>
+        </div>
       </div>
     </a>
-    {% if forloop.index == 4 or forloop.index == 8 %}
-    <!-- AdFit 300x250 -->
-    <div class="flex justify-center py-2">
+    {% assign card_index = forloop.index | minus: 1 %}
+    {% if card_index == 4 or card_index == 8 %}
+    <div class="ad-slot flex justify-center py-2">
       <ins class="kakao_ad_area" style="display:none;"
         data-ad-unit="DAN-eCimrfaC9UFuFmG4"
         data-ad-width="300"
@@ -213,6 +209,7 @@ layout: default
 
   var activeFilter = 'all';
   var activeTag    = '';
+  var featuredCard = document.querySelector('.featured-card');
   var searchQuery  = '';
   var tagPanelOpen = false;
 
@@ -223,6 +220,20 @@ layout: default
     var cat = normalize(activeFilter);
     var tag = normalize(activeTag);
     var visible = 0;
+
+    // Filter featured card too
+    if (featuredCard) {
+      var fTitle = (featuredCard.querySelector('h2') || {}).textContent || '';
+      fTitle = normalize(fTitle);
+      var fCats = normalize(featuredCard.dataset.categories || '');
+      var fTags = normalize(featuredCard.dataset.tags || '');
+      var fMatchCat = cat === 'all' || fCats.indexOf(cat) !== -1;
+      var fMatchTag = tag === '' || (' ' + fTags + ' ').indexOf(' ' + tag + ' ') !== -1;
+      var fMatchSearch = q === '' || fTitle.indexOf(q) !== -1 || fTags.indexOf(q) !== -1;
+      var fShow = fMatchCat && fMatchTag && fMatchSearch;
+      featuredCard.closest('section').style.display = fShow ? '' : 'none';
+      if (fShow) visible++;
+    }
 
     cards.forEach(function (card) {
       var title      = card.dataset.title || '';

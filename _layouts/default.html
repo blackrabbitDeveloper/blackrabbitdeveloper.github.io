@@ -114,38 +114,30 @@
     <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3.5 sm:px-6">
 
       <!-- Logo -->
-      <a href="{{ '/' | relative_url }}" class="group flex items-center gap-2.5 no-underline">
-        <span class="text-base font-semibold tracking-tight text-white transition-colors group-hover:text-white/90">
-          Black<span class="text-brand">Rabbit</span> LAB
+      <a href="{{ '/' | relative_url }}" class="group flex items-center gap-1.5 no-underline">
+        <span class="text-base font-bold tracking-tight text-white transition-colors group-hover:text-white/90" style="letter-spacing:-0.02em;">
+          Black<span class="text-brand">Rabbit</span>
         </span>
-        <span class="rounded border border-brand/35 bg-brand/10 px-1.5 py-0.5 font-mono text-[10px] font-medium text-brand leading-none tracking-wide">BLOG</span>
+        <span class="text-sm font-normal text-zinc-500">LAB</span>
       </a>
 
       <!-- Desktop Nav -->
-      <nav class="hidden md:flex items-center gap-0.5">
+      <nav class="hidden md:flex items-center gap-1">
         <a href="{{ '/' | relative_url }}"
-          class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.05] hover:text-white {% if page.url == '/' %}nav-link-active{% endif %}">블로그</a>
+          class="px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-white {% if page.url == '/' %}nav-link-active{% endif %}">블로그</a>
         <a href="{{ '/tools/' | relative_url }}"
-          class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.05] hover:text-white {% if page.url contains '/tools' %}nav-link-active{% endif %}">툴</a>
+          class="px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-white {% if page.url contains '/tools' %}nav-link-active{% endif %}">툴</a>
         <a href="{{ '/projects' | relative_url }}"
-          class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.05] hover:text-white {% if page.url == '/projects/' %}nav-link-active{% endif %}">프로젝트</a>
+          class="px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-white {% if page.url == '/projects/' %}nav-link-active{% endif %}">프로젝트</a>
         <a href="{{ '/about' | relative_url }}"
-          class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.05] hover:text-white {% if page.url == '/about/' %}nav-link-active{% endif %}">소개</a>
-        <a href="{{ '/glossary/' | relative_url }}"
-          class="rounded-md px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:bg-white/[0.05] hover:text-white {% if page.url == '/glossary/' %}nav-link-active{% endif %}">용어 사전</a>
-        <div class="ml-2 h-4 w-px bg-white/10"></div>
+          class="px-3 py-1.5 text-sm font-medium text-zinc-400 transition-colors hover:text-white {% if page.url == '/about/' %}nav-link-active{% endif %}">소개</a>
+        <div class="ml-1 h-4 w-px bg-white/10"></div>
         <button class="theme-toggle" aria-label="테마 전환">
           <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
         <a href="https://blackrabbitlab.site" target="_blank" rel="noopener noreferrer"
-          class="ml-2 inline-flex items-center gap-1.5 rounded-md border border-brand/30 bg-brand/10 px-3 py-1.5 text-sm font-medium text-brand transition hover:bg-brand/15 hover:border-brand/50">
-          <span class="relative flex h-1.5 w-1.5 flex-shrink-0">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-60"></span>
-            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand"></span>
-          </span>
-          STOCKER
-        </a>
+          class="ml-1 px-3 py-1.5 text-sm font-medium text-brand transition-colors hover:underline">STOCKER ↗</a>
       </nav>
 
       <!-- Mobile: theme toggle + hamburger -->
@@ -169,20 +161,13 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden border-t border-white/[0.06] md:hidden">
       <nav class="mx-auto max-w-5xl px-4 py-3 sm:px-6 space-y-0.5">
-        <a href="{{ '/' | relative_url }}"          class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/[0.05] hover:text-white">블로그</a>
-        <a href="{{ '/tools/' | relative_url }}"     class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/[0.05] hover:text-white">툴</a>
-        <a href="{{ '/projects' | relative_url }}"   class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/[0.05] hover:text-white">프로젝트</a>
-        <a href="{{ '/about' | relative_url }}"      class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/[0.05] hover:text-white">소개</a>
-        <a href="{{ '/glossary/' | relative_url }}" class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:bg-white/[0.05] hover:text-white">용어 사전</a>
+        <a href="{{ '/' | relative_url }}"          class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:text-white">블로그</a>
+        <a href="{{ '/tools/' | relative_url }}"     class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:text-white">툴</a>
+        <a href="{{ '/projects' | relative_url }}"   class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:text-white">프로젝트</a>
+        <a href="{{ '/about' | relative_url }}"      class="block rounded-md px-3 py-2.5 text-sm font-medium text-zinc-400 transition hover:text-white">소개</a>
         <div class="pt-2 pb-1">
           <a href="https://blackrabbitlab.site" target="_blank" rel="noopener noreferrer"
-            class="flex items-center gap-2 rounded-md border border-brand/30 bg-brand/10 px-3 py-2.5 text-sm font-medium text-brand">
-            <span class="relative flex h-1.5 w-1.5">
-              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-60"></span>
-              <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand"></span>
-            </span>
-            STOCKER — 주식 리서치
-          </a>
+            class="block px-3 py-2.5 text-sm font-medium text-brand transition hover:underline">STOCKER ↗</a>
         </div>
       </nav>
     </div>
@@ -195,30 +180,40 @@
   <!-- Footer -->
   <footer class="border-t border-white/[0.06]">
     <div class="mx-auto max-w-5xl px-4 sm:px-6 py-10">
-      <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-[1.5fr_1fr_1fr]">
 
         <!-- Brand -->
         <div>
-          <p class="text-sm font-semibold text-white">Black<span class="text-brand">Rabbit</span> LAB</p>
-          <p class="mt-1 font-mono text-[11px] text-zinc-700">투자·경제 블로그</p>          
+          <p class="text-sm font-bold text-white" style="letter-spacing:-0.02em;">Black<span class="text-brand">Rabbit</span> <span class="font-normal text-zinc-500">LAB</span></p>
+          <p class="mt-2 text-xs leading-relaxed text-zinc-600">투자·경제 정보를 쉽고 정확하게.<br>누구나 이해할 수 있는 금융 콘텐츠.</p>
         </div>
 
-        <!-- Links -->
-        <div class="flex flex-wrap gap-x-6 gap-y-2">
-          <a href="{{ '/about' | relative_url }}"    class="text-sm text-zinc-600 hover:text-zinc-300 transition-colors">소개</a>
-          <a href="{{ '/tools/' | relative_url }}"   class="text-sm text-zinc-600 hover:text-zinc-300 transition-colors">툴</a>
-          <a href="{{ '/projects' | relative_url }}" class="text-sm text-zinc-600 hover:text-zinc-300 transition-colors">프로젝트</a>
-          <a href="{{ '/contact' | relative_url }}"  class="text-sm text-zinc-600 hover:text-zinc-300 transition-colors">연락처</a>
-          <a href="{{ '/terms' | relative_url }}"    class="text-sm text-zinc-600 hover:text-zinc-300 transition-colors">이용약관</a>
-          <a href="{{ '/privacy' | relative_url }}"  class="text-sm text-zinc-600 hover:text-zinc-300 transition-colors">개인정보처리방침</a>
+        <!-- Navigate -->
+        <div>
+          <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-brand mb-3">탐색</p>
+          <div class="space-y-2">
+            <a href="{{ '/' | relative_url }}"          class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">블로그</a>
+            <a href="{{ '/tools/' | relative_url }}"    class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">투자 계산기</a>
+            <a href="{{ '/glossary/' | relative_url }}" class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">용어 사전</a>
+            <a href="{{ '/projects' | relative_url }}"  class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">프로젝트</a>
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div>
+          <p class="font-mono text-[10px] font-medium uppercase tracking-widest text-brand mb-3">정보</p>
+          <div class="space-y-2">
+            <a href="{{ '/about' | relative_url }}"    class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">소개</a>
+            <a href="{{ '/contact' | relative_url }}"  class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">연락처</a>
+            <a href="{{ '/terms' | relative_url }}"    class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">이용약관</a>
+            <a href="{{ '/privacy' | relative_url }}"  class="block text-sm text-zinc-600 hover:text-zinc-300 transition-colors">개인정보처리방침</a>
+          </div>
         </div>
       </div>
 
-      <div class="mt-8 border-t border-white/[0.06] pt-6 space-y-2">
-        <p class="text-center text-xs leading-relaxed text-zinc-700">
-          이 사이트의 모든 콘텐츠는 교육 및 정보 제공 목적으로만 작성됩니다. 투자 자문이 아니며, 모든 투자 결정은 본인의 판단과 책임 하에 진행하시기 바랍니다.
-        </p>
-        <p class="text-center font-mono text-xs text-zinc-800">© {{ 'now' | date: "%Y" }} BlackRabbit LAB. All rights reserved.</p>
+      <div class="mt-8 border-t border-white/[0.06] pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <p class="font-mono text-xs text-zinc-800">© {{ 'now' | date: "%Y" }} BlackRabbit LAB</p>
+        <p class="text-xs text-zinc-700">투자 자문이 아닌 교육·정보 목적 콘텐츠</p>
       </div>
     </div>
   </footer>
